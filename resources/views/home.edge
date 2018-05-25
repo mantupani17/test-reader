@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Home</title>
+  {{css('https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0-beta/css/materialize.min.css')}}
+</head>
+<body>
+<div class="navbar-fixed">
+    <nav>
+      <div class="nav-wrapper">
+      <a href="#" class="brand-logo right">Logo</a>
+      <ul id="nav-mobile" class="left hide-on-med-and-down">
+        <li><a href="#" id="create-user">create user</a></li>
+        <li><a href="badges.html">Components</a></li>
+        <li><a href="collapsible.html">JavaScript</a></li>
+      </ul>
+    </div>
+    </nav>
+</div>
+
+<user-frm></user-frm>
+
+<script id="user-form-template" type="text/html">
+ 
+ <div class="row">
+    <form class="col s12" name="save-post">
+        <div class="row">
+            <div class="input-field col s6">
+                <input placeholder="username" id="name" name="username" type="text" class="validate">
+                <label for="name">Username</label>
+            </div>
+        </div>
+        <div class="row">
+            <div class="input-field col s12">
+                <textarea id="textarea1" class="materialize-textarea" name="post"></textarea>
+                <label for="textarea1">Textarea</label>
+            </div>
+        </div>
+        <div class="row">
+        {{ csrfField() }}
+            <button type="submit" class="waves-effect waves-light btn save-user">save</a>
+        </div>
+    </form>
+</div>
+        
+</script>
+<div class="row">
+    <div class="col s12 m6">
+      <div class="card blue-grey darken-1">
+        <div class="card-content white-text">
+          <span class="card-title">Card Title</span>
+          <p class="desc"></p>
+        </div>
+        <div class="card-action">
+          <a href="#">This is a link</a>
+          <a href="#">This is a link</a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+<a class="waves-effect waves-light btn view-csv">view CSV</a>
+
+
+ <div class="col s12 m12 l12">
+                <div class="card">
+                        <table id="post-list-tbl" class="responsive-table display posts-table-list dataTable no-footer " cellspacing="0">
+                        <thead>
+                            <tr role="row">
+                                <th>Post</th>
+                                <th>user</th>
+                                <th>Created On</th>
+                                <th>Created By</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        </tbody>
+                        </table>
+                </div>
+</div>
+
+
+
+ <footer class="page-footer">
+          <div class="container">
+            <div class="row">
+              <div class="col l6 s12">
+                <h5 class="white-text">Footer Content</h5>
+                <p class="grey-text text-lighten-4">You can use rows and columns here to organize your footer content.</p>
+              </div>
+              <div class="col l4 offset-l2 s12">
+                <h5 class="white-text">Links</h5>
+                <ul id="links">
+                
+                </ul>
+              </div>
+            </div>
+          </div>
+          <div class="footer-copyright">
+            <div class="container">
+            © 2014 Copyright Text
+            <a class="grey-text text-lighten-4 right" href="#!">More Links</a>
+            </div>
+          </div>
+        </footer>
+</body>
+{{script('https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js')}}
+{{script('app.js')}}
+{{script('https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0-beta/js/materialize.min.js')}}
+{{script('https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.17.0/jquery.validate.min.js')}}
+{{script('https://cdn.datatables.net/1.10.16/css/jquery.dataTables.min.css')}}
+{{script('https://cdn.datatables.net/1.10.16/js/jquery.dataTables.min.js')}}
+
+<script>
+$(document).ready(function(){
+var task = {
+    init:function(){
+        task.loadUsers();
+        task.loadPosts();
+        
+    },
+    
+    initUserFormEvent:function(){
+         $("form[name='save-post']").validate({
+                rules: {
+                        username: {
+                            required: true,
+                            maxlength:20,
+                            minlength:7
+                            },
+                        desc: {
+                            required: true,
+                            maxlength:100,
+                            minlength:20
+                            },
+                        
+                    },
+
+                    messages: {
+                        username: {
+                            required: "Please enter User name",
+                            maxlength:'maximum should be 20 characters ',
+                            minlength:'minimum should be 7 characters',
+                        },
+                        desc: {
+                            required: "Please select description",
+                            maxlength:'maximum should be 100 characters ',
+                            minlength:'minimum should be 20 characters',
+                        },
+                        
+                    },
+                   
+                    errorElement: 'div',
+
+                    errorPlacement: function(error, element) {
+                        var placement = $(element).data('error');
+                        if (placement) {
+                            $(placement).append(error)
+                        } else {
+                            error.insertAfter(element);
+                        }
+                    },
+
+                    submitHandler: function(form) {
+                        var data = new FormData(form);
+                        app.savePost(data).done(function(response) {
+                                    if (response.status == true) {
+                                         M.toast({html: response.message},4000)
+                                    } else {
+                                        $.showValidationMessage(response.message)
+                                    }
+                                
+                            })
+                        } 
+                });
+
+    },
+
+    loadPosts:function(){
+        app.getPosts().done(function(response){
+            task.renderPosts(response.data);
+        })
+    },
+
+    renderPosts:function(data){
+        $('tbody','.posts-table-list' ).html('');
+        var postdata = '';
+        $.each(data, function(index, list){
+            postdata = '<tr postId="'+list._id+'" class="select-post">';
+            //postdata += '<form name="post-delete-frm"><input type="hidden" name="pid" postId="'+list._id+'">{{csrfField()}}</form>'
+            var post = list.post;
+            var username = list.username;
+            postdata += '<td>'+post+'</td>' ;
+            postdata += '<td>'+username+'</td>';
+            postdata += '<td>'+list.created_at+'</td>';
+            postdata += '<td>'+list.updated_at+'</td>';
+            postdata += '</tr>'
+         $('tbody','.posts-table-list').append(postdata); 
+         task.deletePost();  
+        })
+         $("#post-list-tbl").DataTable({
+            "bDestroy": true,
+            "order": []
+        });
+    },
+
+    deletePost:function(){
+    $('.select-post').unbind('click').on('click', function(){
+        var pid = $(this).attr('postId');
+        console.log(pid)
+        app.deletePost({id:pid}).done(function(response){
+             if(response.status == true){
+             M.toast({html: response.message})
+             task.loadPosts()
+             }else{
+              M.toast({html: response.message})   
+             }
+        })
+    })
+    },
+
+    /*loadUsers:function(){
+        app.getUsers().done(function(response){
+            task.rendersLink(response.data);
+        })
+    },
+    rendersLink:function(data){
+        var data_link = '';
+        data_link += '<li uid="25" class="link-data" style="cursor:pointer;">hello</li>';
+        data_action = '';
+        $.each(data, function( index, list ) {
+            data_link += '<li uid="'+list.id+'" class="link-data" style="cursor:pointer;">'+list.name+'</li>';
+            data_action += '<a href="#" uid="'+list.id+'" class="link-action">'+list.name+'</a>';
+        });
+        $('#links').html(data_link);
+        $('.card-action').html(data_action);
+        task.getUserResult();
+        task.getUserLink();
+    },
+
+    getUserResult:function(){
+        $('.link-data').on('click', function(){
+           var id =  $(this).attr('uid');
+           app.getUser(id).done(function(response){
+              if(response.status == false){
+                   M.toast({html: response.message})
+                  //alert();
+              }else{
+              $('.card-title').html(response.data.name);
+              $('.desc').html(response.data.desc)
+              }
+           })
+        });
+    },
+
+    getUserLink:function(){
+        $('.link-action').on('click', function(){
+           var id =  $(this).attr('uid');
+           app.getUser(id).done(function(response){
+              if(response.status == false){
+                   M.toast({html: response.message})
+                  //alert();
+              }else{
+              $('.card-title').html(response.data.name);
+              $('.desc').html(response.data.desc)
+              }
+           })
+        });
+    },
+
+    renderUserForm:function(){
+        $('user-frm').html($('#user-form-template').text());
+        task.initUserFormEvent();                
+    }*/
+
+
+
+}
+task.init();
+
+/*$('#create-user').on('click', function(){
+    task.renderUserForm();
+    });
+
+$('.view-csv').on('click', function(){
+    app.getCSV().done(function(response){
+        console.log(response);
+    });
+});*/
+});
+
+
+</script>
+</html>

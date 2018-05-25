@@ -1,0 +1,75 @@
+<div class="btn-box-row row-fluid">
+
+    <a href="Users.aspx" class="btn-box big span3">
+        <i class=" icon-group"></i>
+        <b>
+            <asp:Label runat="server" ID="Label1" Text='<%#Eval("total_Users") %>'></asp:Label>
+        </b>
+        <p class="text-muted">Users</p>
+    </a>
+
+    <a href="OngoingAds.aspx" class="btn-box big span3">
+        <i class="fa fa-bullhorn"></i>
+        <b>15</b>
+        <p class="text-muted">
+            Active Ads</p>
+    </a>
+
+    <a href="Categories.aspx" class="btn-box big span3">
+        <i class="fa fa-shopping-bag"></i>
+        <b>15,152</b>
+        <p class="text-muted">
+            Categories</p>
+    </a>
+
+    <a href="#" class="btn-box big span3">
+        <i class="fa fa-gavel"></i>
+        <b>
+            <asp:Label runat="server" ID="Label3" Text='<%#Eval("Visitors") %>'></asp:Label>
+        </b>
+        <p class="text-muted">
+            total visitors</p>
+    </a>
+
+</div>
+
+<div class="btn-box-row row-fluid">
+    <a href="#" class="btn-box big span4">
+        <i class="fa fa-tag"></i>
+        <b>12</b>
+        <p class="text-muted">
+            Ads Sold</p>
+    </a>
+    <a href="OngoingAuctions.aspx" class="btn-box big span4">
+        <i class="fa fa-spinner"></i>
+        <b>15</b>
+        <p class="text-muted">
+            Ongoing Auctions</p>
+    </a>
+    <a href="#" class="btn-box big span4">
+        <i class="fa fa-gavel"></i>
+        <b>15,152</b>
+        <p class="text-muted">
+            Auctions Ended</p>
+    </a>
+
+
+</div>
+
+<div class="btn-box-row row-fluid">
+
+    <a href="Feedback.aspx" class="btn-box small span3">
+        <i class="icon-envelope"></i>
+        <b>Feedback</b>
+    </a>
+    <a href="#" class="btn-box small span3">
+        <i class="icon-group"></i>
+        <b>
+            <asp:Label runat="server" ID="lblVisitors" Text="Total visitors"></asp:Label>
+        </b>
+    </a>
+    <a href="Invoices.aspx" class="btn-box small span3">
+        <i class="fa fa-file-text-o"></i>
+        <b>Invoices</b>
+    </a>
+</div>
