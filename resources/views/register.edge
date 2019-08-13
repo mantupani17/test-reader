@@ -148,11 +148,11 @@ $(document).ready(function(){
                     var data = $( form ).serialize() ;
                     app.saveUser(data).done(function(response){
                          if (response.status == true) {
-                                         M.toast({html: response.message},4000)
-                                         task.clearFormAfterAdd();
-                                    } else {
-                                        $.showValidationMessage(response.message)
-                                    }
+                                M.toast({html: response.message},4000)
+                                task.clearFormAfterAdd();
+                          } else {
+                              alert(response.message)
+                          }
                     })
                 }
             })

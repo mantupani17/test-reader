@@ -82,17 +82,18 @@ module.exports = {
   | Here we define connection settings for MongoDB database.
   |
   | npm i --save lucid-mongo
-  |
+  | mongodb://test_mantu:testmantu123@ds353457.mlab.com:53457/test_db
   */
+
   mongodb: {
     client: 'mongodb',
     connectionString: Env.get('DB_CONNECTION_STRING', ''),
     connection: {
-      host: Env.get('DB_HOST', 'ds129939.mlab.com'),
-      port: Env.get('DB_PORT', 29939),
-      username: Env.get('DB_USER', 'mantu'),
-      password: Env.get('DB_PASSWORD', 'adonis'),
-      database: Env.get('DB_DATABASE', 'schedule'),
+      host: Env.get('DB_HOST', 'ds353457.mlab.com'),
+      port: Env.get('DB_PORT', '53457'),
+      username: Env.get('DB_USER', 'test_mantu'),
+      password: Env.get('DB_PASSWORD', 'testmantu123'),
+      database: Env.get('DB_DATABASE', 'test_db'),
       options: {
         // replicaSet: Env.get('DB_REPLICA_SET', '')
         // ssl: Env.get('DB_SSL, '')

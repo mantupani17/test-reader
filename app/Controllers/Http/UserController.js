@@ -9,47 +9,11 @@ const userData = [
     {name:'deepak maharana',id:'101',desc:'i am simple and cool <h1>dude</h1> and i like to do programming'}
 ]
 
-const userModel = use('App/Models/User')
+const UserHelpers = use('App/Helpers/UserHelper')
+const BaseController = use('App/Controllers/Http/BaseController')
 
-class UserController {
+class UserController extends BaseController{
    
-    async getUsers({request,response}){
-        const res = {
-            status : true,
-            message: 'Users are',
-            data:userData
-        }
-        try {
-            response.send(res)
-        } catch (error) {
-            console.log(error)
-        }
-    }
-
-    async getUser({request, response, params }){
-        const res = {
-            status : true,
-            message: 'Users are',
-            data:''
-        }
-        try {
-           const id = params.id
-           //console.log(id)
-           const result = userData.find( user => user.id === id );
-           if(result == undefined){
-               res.status = false;
-               res.message = 'record not found'
-           }else{
-            res.data = result
-            res.message=''
-           }
-          
-           response.send(res)
-       } catch (error) {
-           console.log(error)
-       }
-    }
-
     async createUser({request, response}){
         const Hash = use('Hash')
         const res = {
@@ -59,12 +23,16 @@ class UserController {
         }
         try {
             const postData = request.all()
-            const usermodel = new userModel()
+            const usermodel = {}
             usermodel.fname = postData['fname']
             usermodel.lname = postData['lname']
             usermodel.email = postData['email']
-            usermodel.password = await Hash.make(postData['password'])
-            await usermodel.save()
+            usermodel.password = postData['password']
+            const userId = await UserHelpers.createUser(usermodel)
+            if(userId == ''){
+                res.status = false
+                res.message = 'Sorry, The data is not register.' 
+            }
             response.send(res);
         } catch (error) {
             console.log(error)
@@ -76,30 +44,79 @@ class UserController {
         }
     }
 
-    async login ({ request, response, auth, view }) {
+    async getUsers({request, response, params }){
         const res = {
-            status:true,
-            message:'Login successfull',
+            status : true,
+            message: 'Users are',
             data:''
         }
         try {
-            const postData = request.all()
-            const email = postData['email']
-            const password = postData['password']
-            const data = await auth.attempt(email, password)
-            // return view.render('home', auth)
-            response.send(res)
-                } catch (error) {
-                    const res = {
-                        status:false,
-                        message:error.message,
-                        data:''
-                    }
-            console.log(error.message)
-            response.send(res)
+            const getData = request.all()
+            const where = {}
+            if(typeof getData.id != 'undefined' && getData.id != ''){
+                where._id = await this.toObjectId('5d3b14183676800b54cf7b47')
+            }
+            const result = await UserHelpers.getAllUsers(where, '');
+            if(result == undefined){
+                res.status = false;
+                res.message = 'record not found'
+            }else{
+                res.data = result
+                res.message=''
+            }
+          
+           response.send(res)
+       } catch (error) {
+           console.log(error)
+           response.send({
+               message: 'OOPS, ERROR',
+               status: false,
+               data : []
+           })
+       }
+    }
+
+    async deleteUser({request, response, params }){
+        const res = {
+            status : true,
+            message: 'Delete Successfuly',
+            data:''
         }
-        
-      }
+        try {
+            const getData = request.all()
+            const where = {}
+            if(typeof getData.id != 'undefined' && getData.id != ''){
+                where._id = await this.toObjectId('5d3b14183676800b54cf7b47')
+            }
+            const result = await UserHelpers.deleteUser(where);
+            if(result == false){
+                res.status = false;
+                res.message = 'record not found'
+            }else{
+                res.data = result
+                res.message=''
+            }
+          
+           response.send(res)
+       } catch (error) {
+           console.log(error)
+           response.send({
+               message: 'OOPS, ERROR',
+               status: false,
+               data : []
+           })
+       }
+    }
+
+
+
+    async test({request, response}){
+        try {
+            response.send("working")
+        } catch (error) {
+            console.log(error)
+        }
+    }
 }
 
 module.exports = UserController

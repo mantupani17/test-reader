@@ -128,11 +128,13 @@ $(document).ready(function(){
             },
             submitHandler: function(form) {
                   var data = new FormData(form);
-                  console.log(data)
                   app.loginUser(data).done(function(response){
-
-                  })
-            }
+                    console.log(response)
+                    if(response.status == true){
+                      location.href = response.redirect;
+                    }
+                  });
+              }
           })
     }
   }

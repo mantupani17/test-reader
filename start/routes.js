@@ -40,51 +40,12 @@
 | user name- mantu_1234
 | password - m@ntup@ni123
 |------------------------------------------------------------------------
+    db name - test_db
+    db user - test_mantu
+    db password - testmantu123
+    mongodb://test_mantu:testmantu123@ds353457.mlab.com:53457/test_db
+
+
+
 */
-
-const Route = use('Route')
-
-Route.on('/').render('welcome',{title:'I MEAN ME | LOGIN'})
-Route.on('/register').render('register',{title:'I MEAN ME | REGISTER'})
-Route.on('/forgot-password').render('forgot-password',{title:'I MEAN ME | FORGOT PASSWORD'})
-
-
-Route
- .group(()=>{
-        Route.get('/','UserController.getUsers')
-        Route.get('/:id','UserController.getUser')
-        Route.post('/','UserController.createUser')
-        Route.delete('/','UserController.deleteUser')
- })
- .prefix('api/user')
-
- Route.group(()=>{
-    Route.post('/login','UserController.login')
-    Route.post('/forgot-password','UserController.forgotPassword')
-    Route.post('/change-password','UserController.changePassword')
- })
- .prefix('api/auth/user')
-
-
- Route
- .group(()=>{
-     Route.get('/','CsvController.getCsvData')
- })
- .prefix('api/csv')
-
-
- Route 
-    .group(()=>{
-        Route.post('/','PostController.createPost')
-        Route.get('/','PostController.getPosts')
-        Route.get('/:id','PostController.getPost')
-        Route.get('/delete/:id','PostController.deletePost')
-    }).prefix('api/post')
-
-    
-Route
-    .group(()=>{
-        Route.post('/','PostController.createPost')
-    }).prefix('api/admin/post')
-
-
+use('require-all')(`${use('Helpers').appRoot()}/app/Routes/`)
