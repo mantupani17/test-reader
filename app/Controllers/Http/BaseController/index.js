@@ -2,7 +2,7 @@
 
 class BaseController {
     constructor(){
-        console.log('fucking')
+        // console.log('fucking')
         const Helpers = use('Helpers')
         const AppRoot = Helpers.appRoot()
         const resourcesPath = Helpers.resourcesPath()

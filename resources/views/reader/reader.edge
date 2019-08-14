@@ -40,7 +40,16 @@
     <script src="/reader/reader-custom.js"></script>
     <script>
       $(document).ready(function(){
-        Annotation.init();
+        $.ajax({
+          url:'/api/media/metadata',
+          type:'GET',
+          dataType:'json',
+          success: function(data){
+            var metadata = data.metadata;
+            Annotation.init(metadata);
+          }
+        })
+        
       })
       
     </script>

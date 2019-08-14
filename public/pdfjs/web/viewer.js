@@ -1012,8 +1012,8 @@ var PDFViewerApplication = {
 
               loadingTask.onUnsupportedFeature = this.fallback.bind(this);
               return _context7.abrupt("return", loadingTask.promise.then(function (pdfDocument) {  
-                pdfDocument._pdfInfo.numPages = 15
-                console.log(pdfDocument)              
+                // pdfDocument._pdfInfo.numPages = 15
+                // console.log(pdfDocument)              
                 _this2.load(pdfDocument);
               }, function (exception) {
                 if (loadingTask !== _this2.pdfLoadingTask) {
@@ -1198,7 +1198,7 @@ var PDFViewerApplication = {
     var openActionDestPromise = pdfDocument.getOpenActionDestination().catch(function () {});
     console.log('TODO')
     this.toolbar.setPagesCount(pdfDocument.numPages, false);
-    this.secondaryToolbar.setPagesCount(pdfDocument.numPages);
+    // this.secondaryToolbar.setPagesCount(pdfDocument.numPages);
     var store = this.store = new _view_history.ViewHistory(pdfDocument.fingerprint);
     var baseDocumentUrl;
     baseDocumentUrl = null;
@@ -10375,7 +10375,7 @@ function () {
     value: function setDocument(pdfDocument) {
 
 
-      console.log(pdfDocument)
+      // console.log(pdfDocument)
       var _this2 = this;
       if (this.pdfDocument) {
         this._cancelRendering();
@@ -10988,7 +10988,7 @@ function () {
       if (pageView) {
        
         if(pageView.id == 1){
-          console.log(pageView)
+          // console.log(pageView)
           this._ensurePdfPageLoaded(pageView).then(function () {
             _this4.renderingQueue.renderView(pageView);
           });
@@ -13206,11 +13206,11 @@ function () {
       var eventBus = this.eventBus,
           items = this.items;
       var self = this;
-      items.previous.addEventListener('click', function () {
-        eventBus.dispatch('previouspage', {
-          source: self
-        });
-      });
+      // items.previous.addEventListener('click', function () {
+      //   eventBus.dispatch('previouspage', {
+      //     source: self
+      //   });
+      // });
       // items.next.addEventListener('click', function () {
       //   eventBus.dispatch('nextpage', {
       //     source: self
@@ -13226,15 +13226,15 @@ function () {
           source: self
         });
       });
-      items.pageNumber.addEventListener('click', function () {
-        this.select();
-      });
-      items.pageNumber.addEventListener('change', function () {
-        eventBus.dispatch('pagenumberchanged', {
-          source: self,
-          value: this.value
-        });
-      });
+      // items.pageNumber.addEventListener('click', function () {
+      //   this.select();
+      // });
+      // items.pageNumber.addEventListener('change', function () {
+      //   eventBus.dispatch('pagenumberchanged', {
+      //     source: self,
+      //     value: this.value
+      //   });
+      // });
       items.scaleSelect.addEventListener('change', function () {
         if (this.value === 'custom') {
           return;
@@ -13302,7 +13302,7 @@ function () {
           this.l10n.get('of_pages', {
             pagesCount: pagesCount
           }, 'of {{pagesCount}}').then(function (msg) {
-            items.numPages.textContent = msg;
+            // items.numPages.textContent = msg;
           });
         }
 
@@ -13310,19 +13310,19 @@ function () {
       }
 
       if (this.hasPageLabels) {
-        items.pageNumber.value = this.pageLabel;
+        // items.pageNumber.value = this.pageLabel;
         this.l10n.get('page_of_pages', {
           pageNumber: pageNumber,
           pagesCount: pagesCount
         }, '({{pageNumber}} of {{pagesCount}})').then(function (msg) {
-          items.numPages.textContent = msg;
+          // items.numPages.textContent = msg;
         });
       } else {
-        items.pageNumber.value = pageNumber;
+        // items.pageNumber.value = pageNumber;
       }
 
-      items.previous.disabled = pageNumber <= 1;
-      items.next.disabled = pageNumber >= pagesCount;
+      // items.previous.disabled = pageNumber <= 1;
+      // items.next.disabled = pageNumber >= pagesCount;
       items.zoomOut.disabled = pageScale <= _ui_utils.MIN_SCALE;
       items.zoomIn.disabled = pageScale >= _ui_utils.MAX_SCALE;
       var customScale = Math.round(pageScale * 10000) / 100;
