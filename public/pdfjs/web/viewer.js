@@ -260,7 +260,7 @@ function webViewerLoad() {
   document.dispatchEvent(event);
   pdfjsWebApp.PDFViewerApplication.run(config);
 }
-
+console.log(document)
 if (document.readyState === 'interactive' || document.readyState === 'complete') {
   webViewerLoad();
 } else {
@@ -859,7 +859,6 @@ var PDFViewerApplication = {
     this.url = url;
     this.baseUrl = url.split('#')[0];
     var title = (0, _ui_utils.getPDFFileNameFromURL)(url, '');
-
     if (!title) {
       try {
         title = decodeURIComponent((0, _pdfjsLib.getFilenameFromUrl)(url)) || url;
@@ -964,13 +963,12 @@ var PDFViewerApplication = {
 
             case 3:
               workerParameters = _app_options.AppOptions.getAll('worker');
-
               for (key in workerParameters) {
                 _pdfjsLib.GlobalWorkerOptions[key] = workerParameters[key];
               }
 
               parameters = Object.create(null);
-
+             
               if (typeof file === 'string') {
                 this.setTitleUsingUrl(file);
                 parameters.url = file;
@@ -980,13 +978,13 @@ var PDFViewerApplication = {
                 this.setTitleUsingUrl(file.originalUrl);
                 parameters.url = file.url;
               }
-
+              
               apiParameters = _app_options.AppOptions.getAll('api');
-
+              
               for (_key in apiParameters) {
                 parameters[_key] = apiParameters[_key];
               }
-
+              
               if (args) {
                 for (prop in args) {
                   if (prop === 'length') {
@@ -999,22 +997,23 @@ var PDFViewerApplication = {
 
               loadingTask = (0, _pdfjsLib.getDocument)(parameters);
               this.pdfLoadingTask = loadingTask;
+              // loadingTask.onPassword = function (updateCallback, reason) {
+              //   _this2.passwordPrompt.setUpdateCallback(updateCallback, reason);
 
-              loadingTask.onPassword = function (updateCallback, reason) {
-                _this2.passwordPrompt.setUpdateCallback(updateCallback, reason);
+              //   _this2.passwordPrompt.open();
+              // };
 
-                _this2.passwordPrompt.open();
-              };
-
+              // this is loading the loader
               loadingTask.onProgress = function (_ref) {
                 var loaded = _ref.loaded,
                     total = _ref.total;
-
                 _this2.progress(loaded / total);
               };
 
               loadingTask.onUnsupportedFeature = this.fallback.bind(this);
-              return _context7.abrupt("return", loadingTask.promise.then(function (pdfDocument) {
+              return _context7.abrupt("return", loadingTask.promise.then(function (pdfDocument) {  
+                pdfDocument._pdfInfo.numPages = 15
+                console.log(pdfDocument)              
                 _this2.load(pdfDocument);
               }, function (exception) {
                 if (loadingTask !== _this2.pdfLoadingTask) {
@@ -1184,22 +1183,22 @@ var PDFViewerApplication = {
     var _this5 = this;
 
     this.pdfDocument = pdfDocument;
-    pdfDocument.getDownloadInfo().then(function () {
-      _this5.downloadComplete = true;
+    // pdfDocument.getDownloadInfo().then(function () {
+    //   _this5.downloadComplete = true;
 
-      _this5.loadingBar.hide();
+    //   _this5.loadingBar.hide();
 
-      firstPagePromise.then(function () {
-        _this5.eventBus.dispatch('documentloaded', {
-          source: _this5
-        });
-      });
-    });
+    //   firstPagePromise.then(function () {
+    //     _this5.eventBus.dispatch('documentloaded', {
+    //       source: _this5
+    //     });
+    //   });
+    // });
     var pageModePromise = pdfDocument.getPageMode().catch(function () {});
     var openActionDestPromise = pdfDocument.getOpenActionDestination().catch(function () {});
     console.log('TODO')
-    this.toolbar.setPagesCount(10, false);
-    this.secondaryToolbar.setPagesCount(10);
+    this.toolbar.setPagesCount(pdfDocument.numPages, false);
+    this.secondaryToolbar.setPagesCount(pdfDocument.numPages);
     var store = this.store = new _view_history.ViewHistory(pdfDocument.fingerprint);
     var baseDocumentUrl;
     baseDocumentUrl = null;
@@ -1730,6 +1729,7 @@ var PDFViewerApplication = {
     _boundEvents.windowAfterPrint = null;
   }
 };
+window.PDFViewerApplication = PDFViewerApplication;
 exports.PDFViewerApplication = PDFViewerApplication;
 var validateFileURL;
 {
@@ -1806,18 +1806,18 @@ function webViewerInitialized() {
     fileInput.value = null;
   }
 
-  fileInput.addEventListener('change', function (evt) {
-    var files = evt.target.files;
+  // fileInput.addEventListener('change', function (evt) {
+  //   var files = evt.target.files;
 
-    if (!files || files.length === 0) {
-      return;
-    }
+  //   if (!files || files.length === 0) {
+  //     return;
+  //   }
 
-    PDFViewerApplication.eventBus.dispatch('fileinputchange', {
-      source: this,
-      fileInput: evt.target
-    });
-  });
+  //   PDFViewerApplication.eventBus.dispatch('fileinputchange', {
+  //     source: this,
+  //     fileInput: evt.target
+  //   });
+  // });
   appConfig.mainContainer.addEventListener('dragover', function (evt) {
     evt.preventDefault();
     evt.dataTransfer.dropEffect = 'move';
@@ -1862,7 +1862,7 @@ function webViewerInitialized() {
   });
 
   try {
-    webViewerOpenFileViaURL(file);
+    // webViewerOpenFileViaURL(file);
   } catch (reason) {
     PDFViewerApplication.l10n.get('loading_error', null, 'An error occurred while loading the PDF.').then(function (msg) {
       PDFViewerApplication.error(msg, reason);
@@ -1873,6 +1873,7 @@ function webViewerInitialized() {
 var webViewerOpenFileViaURL;
 {
   webViewerOpenFileViaURL = function webViewerOpenFileViaURL(file) {
+    console.log(file)
     if (file && file.lastIndexOf('file:', 0) === 0) {
       PDFViewerApplication.setTitleUsingUrl(file);
       var xhr = new XMLHttpRequest();
@@ -4623,19 +4624,20 @@ function () {
         }
       }
 
-      if (scrolledDown) {
-        var nextPageIndex = visible.last.id;
+      // if (scrolledDown) {
+      //     console.log('dfksfkjfksd')
+      //   // var nextPageIndex = visible.last.id;
 
-        if (views[nextPageIndex] && !this.isViewFinished(views[nextPageIndex])) {
-          return views[nextPageIndex];
-        }
-      } else {
-        var previousPageIndex = visible.first.id - 2;
+      //   // if (views[nextPageIndex] && !this.isViewFinished(views[nextPageIndex])) {
+      //   //   return views[nextPageIndex];
+      //   // }
+      // } else {
+      //   var previousPageIndex = visible.first.id - 2;
 
-        if (views[previousPageIndex] && !this.isViewFinished(views[previousPageIndex])) {
-          return views[previousPageIndex];
-        }
-      }
+      //   if (views[previousPageIndex] && !this.isViewFinished(views[previousPageIndex])) {
+      //     return views[previousPageIndex];
+      //   }
+      // }
 
       return null;
     }
@@ -5217,7 +5219,7 @@ var defaultOptions = {
     kind: OptionKind.API
   },
   cMapUrl: {
-    value: '../web/cmaps/',
+    value: '/pdfjs/web/cmaps/',
     kind: OptionKind.API
   },
   disableAutoFetch: {
@@ -6998,9 +7000,9 @@ function () {
         });
       };
 
-      for (var i = 0, ii = this._linkService.pagesCount; i < ii; i++) {
-        _loop(i, ii);
-      }
+      // for (var i = 0, ii = this._linkService.pagesCount; i < ii; i++) {
+      //   // _loop(i, ii);
+      // }
     }
   }, {
     key: "_updatePage",
@@ -7031,7 +7033,7 @@ function () {
       var currentPageIndex = this._linkService.page - 1;
       var numPages = this._linkService.pagesCount;
       this._highlightMatches = true;
-
+      return true
       if (this._dirtyMatch) {
         this._dirtyMatch = false;
         this._selected.pageIdx = this._selected.matchIdx = -1;
@@ -7075,7 +7077,6 @@ function () {
 
       if (offset.matchIdx !== null) {
         var numPageMatches = this._pageMatches[offset.pageIdx].length;
-
         if (!previous && offset.matchIdx + 1 < numPageMatches || previous && offset.matchIdx > 0) {
           offset.matchIdx = previous ? offset.matchIdx - 1 : offset.matchIdx + 1;
 
@@ -9471,7 +9472,8 @@ function () {
     value: function setDocument(pdfDocument) {
       console.log('setDocument five')
       var _this = this;
-
+      this._cancelRendering();
+      return
       if (this.pdfDocument) {
         this._cancelRendering();
 
@@ -10371,6 +10373,9 @@ function () {
   }, {
     key: "setDocument",
     value: function setDocument(pdfDocument) {
+
+
+      console.log(pdfDocument)
       var _this2 = this;
       if (this.pdfDocument) {
         this._cancelRendering();
@@ -10422,7 +10427,7 @@ function () {
           scale: scale * _ui_utils.CSS_UNITS
         });
 
-        for (var pageNum = 1; pageNum <= pagesCount; ++pageNum) {
+        for (var pageNum = 1; pageNum <= 1; ++pageNum) {
           var textLayerFactory = null;
 
           if (_this2.textLayerMode !== _ui_utils.TextLayerMode.DISABLE) {
@@ -10486,7 +10491,7 @@ function () {
             });
           };
 
-          for (var _pageNum = 1; _pageNum <= pagesCount; ++_pageNum) {
+          for (var _pageNum = 1; _pageNum <= 1; ++_pageNum) {
             _loop(_pageNum);
           }
         });
@@ -10956,8 +10961,9 @@ function () {
       }
 
       var promise = this.pdfDocument.getPage(pageNumber).then(function (pdfPage) {
-        if (!pageView.pdfPage) {
+        if (!pageView.pdfPage && pageView.id == 1) {
           pageView.setPdfPage(pdfPage);
+          return pdfPage
         }
 
         _this3._pagesRequests[pageNumber] = null;
@@ -10980,9 +10986,15 @@ function () {
       var pageView = this.renderingQueue.getHighestPriority(visiblePages, this._pages, scrollAhead);
 
       if (pageView) {
-        this._ensurePdfPageLoaded(pageView).then(function () {
-          _this4.renderingQueue.renderView(pageView);
-        });
+       
+        if(pageView.id == 1){
+          console.log(pageView)
+          this._ensurePdfPageLoaded(pageView).then(function () {
+            _this4.renderingQueue.renderView(pageView);
+          });
+          return true
+        }
+
 
         return true;
       }
@@ -11556,7 +11568,7 @@ function () {
     div.className = 'page';
     div.style.width = Math.floor(this.viewport.width) + 'px';
     div.style.height = Math.floor(this.viewport.height) + 'px';
-    div.setAttribute('data-page-number', this.id);
+    div.setAttribute('data-page-number','fuck');
     this.div = div;
     container.appendChild(div);
   }
@@ -13199,11 +13211,11 @@ function () {
           source: self
         });
       });
-      items.next.addEventListener('click', function () {
-        eventBus.dispatch('nextpage', {
-          source: self
-        });
-      });
+      // items.next.addEventListener('click', function () {
+      //   eventBus.dispatch('nextpage', {
+      //     source: self
+      //   });
+      // });
       items.zoomIn.addEventListener('click', function () {
         eventBus.dispatch('zoomin', {
           source: self
@@ -13368,7 +13380,7 @@ function () {
 
   return Toolbar;
 }();
-
+window.Toolbar = Toolbar;
 exports.Toolbar = Toolbar;
 
 /***/ }),

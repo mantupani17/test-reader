@@ -36,6 +36,14 @@
 <!--#if !MINIFIED -->
     <script src="/pdfjs/build/pdf.js"></script>    
     <script src="/pdfjs/web/viewer.js"></script>
+    <script src="/assets/js/jquery.min.js"></script>
+    <script src="/reader/reader-custom.js"></script>
+    <script>
+      $(document).ready(function(){
+        Annotation.init();
+      })
+      
+    </script>
 <!--#else-->
 <!--#include viewer-snippet-minified.html-->
 <!--#endif-->
