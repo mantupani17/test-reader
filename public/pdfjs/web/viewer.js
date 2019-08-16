@@ -260,7 +260,6 @@ function webViewerLoad() {
   document.dispatchEvent(event);
   pdfjsWebApp.PDFViewerApplication.run(config);
 }
-console.log(document)
 if (document.readyState === 'interactive' || document.readyState === 'complete') {
   webViewerLoad();
 } else {
@@ -1196,7 +1195,6 @@ var PDFViewerApplication = {
     // });
     var pageModePromise = pdfDocument.getPageMode().catch(function () {});
     var openActionDestPromise = pdfDocument.getOpenActionDestination().catch(function () {});
-    console.log('TODO')
     this.toolbar.setPagesCount(pdfDocument.numPages, false);
     // this.secondaryToolbar.setPagesCount(pdfDocument.numPages);
     var store = this.store = new _view_history.ViewHistory(pdfDocument.fingerprint);
@@ -1596,10 +1594,10 @@ var PDFViewerApplication = {
     eventBus.on('hashchange', webViewerHashchange);
     eventBus.on('beforeprint', _boundEvents.beforePrint);
     eventBus.on('afterprint', _boundEvents.afterPrint);
-    eventBus.on('pagerendered', webViewerPageRendered);
-    eventBus.on('textlayerrendered', webViewerTextLayerRendered);
-    eventBus.on('updateviewarea', webViewerUpdateViewarea);
-    eventBus.on('pagechanging', webViewerPageChanging);
+    // eventBus.on('pagerendered', webViewerPageRendered);
+    // eventBus.on('textlayerrendered', webViewerTextLayerRendered);
+    // eventBus.on('updateviewarea', webViewerUpdateViewarea);
+    // eventBus.on('pagechanging', webViewerPageChanging);
     eventBus.on('scalechanging', webViewerScaleChanging);
     eventBus.on('rotationchanging', webViewerRotationChanging);
     eventBus.on('sidebarviewchanged', webViewerSidebarViewChanged);
@@ -6009,9 +6007,9 @@ function () {
     this.overlayManager.register(this.overlayName, this.container, this.close.bind(this));
 
     if (eventBus) {
-      eventBus.on('pagechanging', function (evt) {
-        _this._currentPageNumber = evt.pageNumber;
-      });
+      // eventBus.on('pagechanging', function (evt) {
+      //   _this._currentPageNumber = evt.pageNumber;
+      // });
       eventBus.on('rotationchanging', function (evt) {
         _this._pagesRotation = evt.pagesRotation;
       });
@@ -7908,7 +7906,7 @@ function () {
         }
       };
 
-      eventBus.on('updateviewarea', _boundEvents.updateViewarea);
+      // eventBus.on('updateviewarea', _boundEvents.updateViewarea);
       window.addEventListener('popstate', _boundEvents.popState);
       window.addEventListener('pagehide', _boundEvents.pageHide);
     }
@@ -11568,7 +11566,7 @@ function () {
     div.className = 'page';
     div.style.width = Math.floor(this.viewport.width) + 'px';
     div.style.height = Math.floor(this.viewport.height) + 'px';
-    div.setAttribute('data-page-number','fuck');
+    div.setAttribute('data-page-number',this.id);
     this.div = div;
     container.appendChild(div);
   }
@@ -13827,7 +13825,7 @@ function getDefaultPreferences() {
       "sidebarViewOnLoad": -1,
       "cursorToolOnLoad": 0,
       "enableWebGL": false,
-      "eventBusDispatchToDOM": false,
+      "eventBusDispatchToDOM": true,
       "pdfBugEnabled": false,
       "disableRange": false,
       "disableStream": false,

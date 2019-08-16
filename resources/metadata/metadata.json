@@ -3,5 +3,6 @@
     "totalPages":16,
     "author":"Mantu",
     "coAuth":"mantu",
-    "mainFile":"doc_1"   
+    "mainFile":"doc_1",
+    "bookid":"123"   
 }

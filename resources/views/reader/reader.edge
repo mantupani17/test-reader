@@ -19,7 +19,8 @@
 <!--#include viewer-snippet-chrome-extension.html-->
 <!--#endif-->
 
-    <link rel="stylesheet" href="/pdfjs/web/viewer.css">
+    <link rel="stylesheet" href="{{ assetsUrl('/pdfjs/web/viewer.css')}}">
+    <link rel="stylesheet" href="{{ assetsUrl('/pdfjs/css/note.css')}}">
 <!--#if !PRODUCTION-->
     <link rel="resource" type="application/l10n" href="/pdfjs/web/locale/locale.properties">
 <!--#endif-->
@@ -34,10 +35,12 @@
 <!--#endif-->
 
 <!--#if !MINIFIED -->
-    <script src="/pdfjs/build/pdf.js"></script>    
-    <script src="/pdfjs/web/viewer.js"></script>
-    <script src="/assets/js/jquery.min.js"></script>
-    <script src="/reader/reader-custom.js"></script>
+    <script type="text/javascript" src="{{ assetsUrl('/pdfjs/build/pdf.js')}}"></script>    
+    <script type="text/javascript" src="{{ assetsUrl('/pdfjs/web/viewer.js')}}"></script>
+    <script type="text/javascript" src="{{ assetsUrl('/assets/js/jquery.min.js')}}"></script>
+    <script type="text/javascript" src="{{ assetsUrl('/pdfjs/js/jquery.mark.js')}}"></script>  
+    <script type="text/javascript" src="{{ assetsUrl('/reader/reader-custom.js')}}"></script>
+    <script type="text/javascript" src="{{ assetsUrl('/pdfjs/js/swipetouch.js')}}"></script>  
     <script>
       $(document).ready(function(){
         $.ajax({
@@ -299,7 +302,9 @@
         </menu>
 
         <div id="viewerContainer" tabindex="0">
-          <div id="viewer" class="pdfViewer"></div>
+            <div class="swiper-wrapper">
+              <div id="viewer" class="pdfViewer swiper-slide"></div>
+            </div>
         </div>
 
         <div id="errorWrapper" hidden='true'>
