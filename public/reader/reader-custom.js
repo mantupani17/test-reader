@@ -13,8 +13,75 @@
         },
         pageNum:1,
         selectedColor: 'red',
-        swapper:'.swiper-wrapper'
+        swapper:'.swiper-wrapper',
+        url:'',
+        itemCode:'#itemCode',
+        annotationPopUp:'#annotation-popup',
+        updateNotePopup:'#note-update-popup',
     }
+
+    // Annotation services
+    var services = {
+        getMetaDataAjax: function(itemCode){
+            return $.ajax({
+                url:'/api/media/metadata/'+itemCode,
+                type:'GET',
+                dataType:'json'
+            })
+        },
+
+        getRecentReadPage: function(data){
+            data = data || {};
+            return $.ajax({
+                url:'/api/media/get-recent-page',
+                type:'GET',
+                dataType:'json',
+                data:data
+            })
+        },
+
+        createAnnotation: function(data){
+            data = data || {};
+            return $.ajax({
+                url:'/api/annotation/create-note',
+                type:'GET',
+                dataType:'json',
+                data:data
+            })
+        },
+
+        getAllNotes: function(data){
+            data = data || {};
+            data.itemCode = $(settings.itemCode).val();
+            return $.ajax({
+                url:'/api/annotation/get-notes',
+                type:'GET',
+                dataType:'json',
+                data:data
+            })
+        },
+
+        getNote : function(data){
+            data = data || {};
+            return $.ajax({
+                url:'/api/annotation/get-note',
+                type:'GET',
+                dataType:'json',
+                data:data
+            })
+        },
+
+        updateNote: function(data){
+            data = data || {};
+            return $.ajax({
+                url:'/api/annotation/update-note',
+                type:'GET',
+                dataType:'json',
+                data:data
+            })
+        }
+    }
+
     var PDFTask = global.Annotation = {
         currentPage:1,
         const: {
@@ -52,17 +119,31 @@
             return this.const;
         },
 
+
+        // Get the recent page
+        getRecentReadPage: function(){
+            var self = this;
+            var itemCode = $(settings.itemCode).val()
+            services.getRecentReadPage({ itemCode : itemCode}).done(function(response){
+                if(response.status == true){
+                    settings.pageNum = parseInt(response.recent);
+                }
+                self.loadPage()
+            })
+        },
+
         // Initializing all things regarding to pdfjs
         init: function(metadata){
-            var self = this;            
+            var self = this; 
+            settings.url = metadata.load_url;           
             settings.pdfMetaData = metadata;
-            settings.totalPages = metadata.totalPages;
-            self.loadPage();            
+            settings.totalPages = parseInt(metadata.totalpages);
+            self.getRecentReadPage();           
             self.initPdfEvents();
         },
 
         loadPage: function(){            
-            window.PDFViewerApplication.open('/api/media/reader?fileName=doc_'+settings.pageNum);
+            window.PDFViewerApplication.open(settings.url+settings.pageNum);
             $(settings.templateItems.pageNumberField).val(settings.pageNum);
         },
 
@@ -116,7 +197,6 @@
             });
 
             $(document).bind('textlayerrendered').on('textlayerrendered', function () {
-                alert()
                 // if (pdfData.free === 'Free') {
                 //     var totalpages = PDFViewerApplication.pdfDocumentProperties.pdfDocument.pdfInfo.numPages;
                 //     settings.pageTotal = totalpages;
@@ -127,6 +207,7 @@
                 // }
                 // self._renderAnnotations();
                 // alert()
+                self.loadAllNotes()
             });
 
             //checking the page is rendered or not
@@ -213,7 +294,7 @@
                 annotationRange.selectionColor = settings.selectedColor;
                 annotationRange.markElementName = self.getMarkElementName();
                 var annotationData = {
-                    pageNo: settings.currentPage,
+                    pageNo: settings.pageNum,
                     bookId: pdfData.bookid,
                     annotationRange: annotationRange,
                     selectedText: selectedText,
@@ -229,8 +310,8 @@
                 selectionMetaData = $.extend({}, annotationData, selectionMetaData);
                 self.highlightSelectedText(selectionMetaData);
                 annotationData.itemCode = $(settings.itemCode).val()
-                // self.initNotePopup(annotationData);
-                // $( settings.annotationPopUp ).dialog( "open" );
+                self.initNotePopup(annotationData);
+                $( settings.annotationPopUp ).dialog( "open" );
                 rangeSelection.removeAllRanges();
             });
 
@@ -354,7 +435,7 @@
         loadAllNotes: function(pageno){
             var self = this
             var data = {
-                pageNo : settings.currentPage
+                pageNo : settings.pageNum
             }
             services.getAllNotes(data).done(function(response){
                 if(response.status == true){
@@ -367,7 +448,7 @@
         renderAllNotes: function(annotationData){
             annotationData = annotationData || []
             var self = this;
-            $(settings.sideBarTemplates.notes).html('')
+            // $(settings.sideBarTemplates.notes).html('')
             var allAnnotations = '<div id="notes-accordian">';
             annotationData.forEach(function (annotationDataItem) {
                 var annotation = annotationDataItem;
@@ -393,11 +474,11 @@
                 self.highlightSelectedText(selectionMetaData);
             });
             allAnnotations += '</div>';
-            $(settings.sideBarTemplates.notes).html(allAnnotations)
-            $( "#notes-accordian" ).accordion({
-                collapsible: true,
-                heightStyle: "content"
-            });
+            // $(settings.sideBarTemplates.notes).html(allAnnotations)
+            // $( "#notes-accordian" ).accordion({
+            //     collapsible: true,
+            //     heightStyle: "content"
+            // });
             $('.select-note').attr('title' , 'Click to update note');
             
             self.initSelectNoteMark();
@@ -547,7 +628,6 @@
          * @returns {undefined}
          */
         highlightSelectedText: function (selectionMetaData) {
-            console.log(selectionMetaData)
             var self = this;
             var text = selectionMetaData.selectedText;
             var lineIndexBoundary = selectionMetaData.lineIndexBoundary;
@@ -613,65 +693,7 @@
         Annotation.loadPage();
     }
 
-    // pdfViewerContainer mouse up event handler
-    function pdfViewerMouseUpHandler(event){
-        var selectedText = '';
-        var pdfData = settings.pdfMetaData;
-        event.stopPropagation(); // Stop propagation to preserve selection for annotaion creation
-        var selectedText = Annotation.getSelectionText();
-        var rangeSelection = null;
-        console.log(wrongSelection)
-        return
-        if (this.wrongSelection > 0 && selectedText !== '') {
-            this.wrongSelection = 0;
-            rangeSelection = Annotation.getTextSelectionRange();
-            rangeSelection.removeAllRanges();
-            alert("Wrong selection cannot proceed");
-            return;
-        } else if (this.wrongSelection > 0 && selectedText === '') {
-            this.wrongSelection = 0;
-        }
-        if (selectedText === '') {
-            // Skip creating annotation popup
-            return;
-        }
-        if (selectedText.length < 5) {
-            rangeSelection = Annotation.getTextSelectionRange();
-            rangeSelection.removeAllRanges();
-            //  alert('Please select 5 or more characters');
-            return;
-        }
-        var rangeSelection = Annotation.getTextSelectionRange();
-        var annotationRange = Annotation.getAnnotationBoundaryData();
-        annotationRange.selectionColor = settings.selectedColor;
-        var constants = Annotation.getAnnotationConstants();
-        annotationRange.markElementName = Annotation.getMarkElementName();
-        var annotationData = {
-            pageNo: settings.pageNum,
-            bookId: pdfData.bookid,
-            annotationRange: annotationRange,
-            selectedText: selectedText,
-            type: constants.HIGHLIGHT
-        };
-        selectedText = Annotation.getSelectionPhrases(annotationRange);
-        var selectionMetaData = {
-            selectedText: selectedText,
-            lineIndexBoundary: [annotationRange.anchorLineIndex, annotationRange.focusLineIndex],
-            elementName: annotationRange.markElementName,
-            color: annotationRange.selectionColor
-        };
-        selectionMetaData = $.extend({}, annotationData, selectionMetaData);
-        Annotation.highlightSelectedText(selectionMetaData);
-        // annotationData.itemCode = $(settings.itemCode).val()
-        // self.initNotePopup(annotationData);
-        // $( settings.annotationPopUp ).dialog( "open" );
-        rangeSelection.removeAllRanges();
-    }
-
-    // pdfViewerContainer mouse down event handler
-    function pdfViewerMouseDownHandler(event){
-        this.wrongSelection = 0;
-    }
+    
 
 
 })(window, jQuery);
