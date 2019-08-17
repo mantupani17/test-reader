@@ -18,6 +18,10 @@
         itemCode:'#itemCode',
         annotationPopUp:'#annotation-popup',
         updateNotePopup:'#note-update-popup',
+        secondaryToolBarItems:{
+            firstPage:'#firstPage',
+            lastPage:'#lastPage'
+        }
     }
 
     // Annotation services
@@ -124,12 +128,14 @@
         getRecentReadPage: function(){
             var self = this;
             var itemCode = $(settings.itemCode).val()
-            services.getRecentReadPage({ itemCode : itemCode}).done(function(response){
-                if(response.status == true){
-                    settings.pageNum = parseInt(response.recent);
-                }
-                self.loadPage()
-            })
+            self.loadPage()
+            return 
+            // services.getRecentReadPage({ itemCode : itemCode}).done(function(response){
+            //     if(response.status == true){
+            //         settings.pageNum = parseInt(response.recent);
+            //     }
+            //     self.loadPage()
+            // })
         },
 
         // Initializing all things regarding to pdfjs
@@ -137,13 +143,14 @@
             var self = this; 
             settings.url = metadata.load_url;           
             settings.pdfMetaData = metadata;
-            settings.totalPages = parseInt(metadata.totalpages);
+            settings.totalPages = parseInt(metadata.totalPages);
             self.getRecentReadPage();           
             self.initPdfEvents();
         },
 
         loadPage: function(){            
-            window.PDFViewerApplication.open(settings.url+settings.pageNum);
+            // window.PDFViewerApplication.open(settings.url+settings.pageNum);
+            window.PDFViewerApplication.open('/api/media/reader?fileName=doc_'+settings.pageNum);
             $(settings.templateItems.pageNumberField).val(settings.pageNum);
         },
 
@@ -152,10 +159,14 @@
             if(settings.pageNum <= 1){
                 $(settings.templateItems.prevPageBtn).prop('disabled', true);
             }
+            $(settings.secondaryToolBarItems.firstPage).prop('disabled', false);
+            $(settings.secondaryToolBarItems.lastPage).prop('disabled', false);
             $(settings.totalPagesElement).html('of '+settings.totalPages);
             $(settings.templateItems.nextPageBtn).bind('click').on('click', increasePageHandler);
             $(settings.templateItems.prevPageBtn).bind('click').on('click', dicreasePageHandler);
             $(settings.templateItems.pageNumberField).bind('change').on('change', changePageHandler);
+            $(settings.secondaryToolBarItems.firstPage).bind('click').on('click', firstPageHandler);
+            $(settings.secondaryToolBarItems.lastPage).bind('click').on('click', lastPageHandler);
             
             //Restrict copy Paste in mobile or touch Screen
             $(document).on('taphold', settings.pageAreaSelector, function (event) {
@@ -207,7 +218,7 @@
                 // }
                 // self._renderAnnotations();
                 // alert()
-                self.loadAllNotes()
+                // self.loadAllNotes()
             });
 
             //checking the page is rendered or not
@@ -692,7 +703,22 @@
         settings.pageNum = pageno;
         Annotation.loadPage();
     }
+    
+    // GOTO first page
+    function firstPageHandler(){
+        $(settings.templateItems.prevPageBtn).prop('disabled', true);
+        $(settings.templateItems.nextPageBtn).prop('disabled', false);
+        settings.pageNum = 1;   
+        Annotation.loadPage();     
+    }
 
+    // GOTO last page
+    function lastPageHandler(){
+        $(settings.templateItems.nextPageBtn).prop('disabled', true);
+        $(settings.templateItems.prevPageBtn).prop('disabled', false);
+        settings.pageNum = settings.totalPages;   
+        Annotation.loadPage();     
+    }
     
 
 

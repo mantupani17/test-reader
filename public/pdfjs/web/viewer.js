@@ -1473,7 +1473,7 @@ var PDFViewerApplication = {
   },
   setInitialView: function setInitialView(storedHash) {
     var _this6 = this;
-
+    return
     var _ref7 = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {},
         rotation = _ref7.rotation,
         sidebarView = _ref7.sidebarView,
@@ -1499,7 +1499,7 @@ var PDFViewerApplication = {
     this.isInitialViewSet = true;
     this.pdfSidebar.setInitialView(sidebarView);
     setViewerModes(scrollMode, spreadMode);
-
+    
     if (this.initialBookmark) {
       setRotation(this.initialRotation);
       delete this.initialRotation;
@@ -1605,11 +1605,11 @@ var PDFViewerApplication = {
     eventBus.on('namedaction', webViewerNamedAction);
     eventBus.on('presentationmodechanged', webViewerPresentationModeChanged);
     eventBus.on('presentationmode', webViewerPresentationMode);
-    eventBus.on('openfile', webViewerOpenFile);
-    eventBus.on('print', webViewerPrint);
+    // eventBus.on('openfile', webViewerOpenFile);
+    // eventBus.on('print', webViewerPrint);
     eventBus.on('download', webViewerDownload);
-    eventBus.on('firstpage', webViewerFirstPage);
-    eventBus.on('lastpage', webViewerLastPage);
+    // eventBus.on('firstpage', webViewerFirstPage);
+    // eventBus.on('lastpage', webViewerLastPage);
     eventBus.on('nextpage', webViewerNextPage);
     eventBus.on('previouspage', webViewerPreviousPage);
     eventBus.on('zoomin', webViewerZoomIn);
@@ -1973,7 +1973,9 @@ function webViewerNamedAction(evt) {
 function webViewerPresentationModeChanged(evt) {
   var active = evt.active,
       switchInProgress = evt.switchInProgress;
-  PDFViewerApplication.pdfViewer.presentationModeState = switchInProgress ? _ui_utils.PresentationModeState.CHANGING : active ? _ui_utils.PresentationModeState.FULLSCREEN : _ui_utils.PresentationModeState.NORMAL;
+  PDFViewerApplication.pdfViewer.presentationModeState = switchInProgress ? 
+    _ui_utils.PresentationModeState.CHANGING : active ?
+    _ui_utils.PresentationModeState.FULLSCREEN : _ui_utils.PresentationModeState.NORMAL;
 }
 
 function webViewerSidebarViewChanged(evt) {
@@ -4787,6 +4789,7 @@ function () {
   }, {
     key: "_switchView",
     value: function _switchView(view) {
+      // console.log('fucking here')
       var forceOpen = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : false;
       var isViewChanged = view !== this.active;
       var shouldForceRendering = false;
@@ -4923,7 +4926,7 @@ function () {
       var pdfViewer = this.pdfViewer,
           pdfThumbnailViewer = this.pdfThumbnailViewer;
       var pagesCount = pdfViewer.pagesCount;
-
+      return
       for (var pageIndex = 0; pageIndex < pagesCount; pageIndex++) {
         var pageView = pdfViewer.getPageView(pageIndex);
 
@@ -12789,8 +12792,8 @@ function () {
   }, {
     key: "_updateUIState",
     value: function _updateUIState() {
-      this.items.firstPage.disabled = this.pageNumber <= 1;
-      this.items.lastPage.disabled = this.pageNumber >= this.pagesCount;
+      // this.items.firstPage.disabled = this.pageNumber <= 1;
+      // this.items.lastPage.disabled = this.pageNumber >= this.pagesCount;
       this.items.pageRotateCw.disabled = this.pagesCount === 0;
       this.items.pageRotateCcw.disabled = this.pagesCount === 0;
     }

@@ -22,7 +22,7 @@
     <link rel="stylesheet" href="{{ assetsUrl('/pdfjs/web/viewer.css')}}">
     <link rel="stylesheet" href="{{ assetsUrl('/pdfjs/css/note.css')}}">
 <!--#if !PRODUCTION-->
-    <link rel="resource" type="application/l10n" href="/pdfjs/web/locale/locale.properties">
+    <link rel="resource" type="application/l10n" href="{{ assetsUrl('/pdfjs/web/locale/locale.properties')}}">
 <!--#endif-->
 
 <!--#if !PRODUCTION-->
@@ -49,6 +49,7 @@
           dataType:'json',
           success: function(data){
             var metadata = data.metadata;
+            // console.log(metadata)
             Annotation.init(metadata);
           }
         })
@@ -153,12 +154,12 @@
               <span data-l10n-id="last_page_label">Go to Last Page</span>
             </button>
 
-            <div class="horizontalToolbarSeparator"></div>
+            <div class="horizontalToolbarSeparator hidden"></div>
 
-            <button id="pageRotateCw" class="secondaryToolbarButton rotateCw" title="Rotate Clockwise" tabindex="58" data-l10n-id="page_rotate_cw">
+            <button id="pageRotateCw" class="secondaryToolbarButton rotateCw hidden" title="Rotate Clockwise" tabindex="58" data-l10n-id="page_rotate_cw">
               <span data-l10n-id="page_rotate_cw_label">Rotate Clockwise</span>
             </button>
-            <button id="pageRotateCcw" class="secondaryToolbarButton rotateCcw" title="Rotate Counterclockwise" tabindex="59" data-l10n-id="page_rotate_ccw">
+            <button id="pageRotateCcw" class="secondaryToolbarButton rotateCcw hidden" title="Rotate Counterclockwise" tabindex="59" data-l10n-id="page_rotate_ccw">
               <span data-l10n-id="page_rotate_ccw_label">Rotate Counterclockwise</span>
             </button>
 
@@ -171,27 +172,27 @@
               <span data-l10n-id="cursor_hand_tool_label">Hand Tool</span>
             </button>
 
-            <div class="horizontalToolbarSeparator"></div>
+            <div class="horizontalToolbarSeparator hidden"></div>
 
-            <button id="scrollVertical" class="secondaryToolbarButton scrollModeButtons scrollVertical toggled" title="Use Vertical Scrolling" tabindex="62" data-l10n-id="scroll_vertical">
+            <button id="scrollVertical" class="secondaryToolbarButton scrollModeButtons scrollVertical toggled hidden" title="Use Vertical Scrolling" tabindex="62" data-l10n-id="scroll_vertical">
               <span data-l10n-id="scroll_vertical_label">Vertical Scrolling</span>
             </button>
-            <button id="scrollHorizontal" class="secondaryToolbarButton scrollModeButtons scrollHorizontal" title="Use Horizontal Scrolling" tabindex="63" data-l10n-id="scroll_horizontal">
+            <button id="scrollHorizontal" class="secondaryToolbarButton scrollModeButtons scrollHorizontal hidden" title="Use Horizontal Scrolling" tabindex="63" data-l10n-id="scroll_horizontal">
               <span data-l10n-id="scroll_horizontal_label">Horizontal Scrolling</span>
             </button>
-            <button id="scrollWrapped" class="secondaryToolbarButton scrollModeButtons scrollWrapped" title="Use Wrapped Scrolling" tabindex="64" data-l10n-id="scroll_wrapped">
+            <button id="scrollWrapped" class="secondaryToolbarButton scrollModeButtons scrollWrapped hidden" title="Use Wrapped Scrolling" tabindex="64" data-l10n-id="scroll_wrapped">
               <span data-l10n-id="scroll_wrapped_label">Wrapped Scrolling</span>
             </button>
 
-            <div class="horizontalToolbarSeparator scrollModeButtons"></div>
+            <div class="horizontalToolbarSeparator scrollModeButtons hidden"></div>
 
-            <button id="spreadNone" class="secondaryToolbarButton spreadModeButtons spreadNone toggled" title="Do not join page spreads" tabindex="65" data-l10n-id="spread_none">
+            <button id="spreadNone" class="secondaryToolbarButton spreadModeButtons spreadNone toggled hidden" title="Do not join page spreads" tabindex="65" data-l10n-id="spread_none">
               <span data-l10n-id="spread_none_label">No Spreads</span>
             </button>
-            <button id="spreadOdd" class="secondaryToolbarButton spreadModeButtons spreadOdd" title="Join page spreads starting with odd-numbered pages" tabindex="66" data-l10n-id="spread_odd">
+            <button id="spreadOdd" class="secondaryToolbarButton spreadModeButtons spreadOdd hidden" title="Join page spreads starting with odd-numbered pages" tabindex="66" data-l10n-id="spread_odd">
               <span data-l10n-id="spread_odd_label">Odd Spreads</span>
             </button>
-            <button id="spreadEven" class="secondaryToolbarButton spreadModeButtons spreadEven" title="Join page spreads starting with even-numbered pages" tabindex="67" data-l10n-id="spread_even">
+            <button id="spreadEven" class="secondaryToolbarButton spreadModeButtons spreadEven hidden" title="Join page spreads starting with even-numbered pages" tabindex="67" data-l10n-id="spread_even">
               <span data-l10n-id="spread_even_label">Even Spreads</span>
             </button>
 
@@ -231,20 +232,20 @@
                   <span data-l10n-id="presentation_mode_label">Presentation Mode</span>
                 </button>
 
-                <button id="openFile" class="toolbarButton openFile hiddenLargeView" title="Open File" tabindex="32" data-l10n-id="open_file">
+                <button id="openFile" class="toolbarButton openFile hiddenLargeView hidden" title="Open File" tabindex="32" data-l10n-id="open_file">
                   <span data-l10n-id="open_file_label">Open</span>
                 </button>
 
-                <button id="print" class="toolbarButton print hiddenMediumView" title="Print" tabindex="33" data-l10n-id="print">
+                <button id="print" class="toolbarButton print hiddenMediumView hidden" title="Print" tabindex="33" data-l10n-id="print">
                   <span data-l10n-id="print_label">Print</span>
                 </button>
 
-                <button id="download" class="toolbarButton download hiddenMediumView" title="Download" tabindex="34" data-l10n-id="download">
+                <button id="download" class="toolbarButton download hiddenMediumView" title="Download Notes" tabindex="34">
                   <span data-l10n-id="download_label">Download</span>
                 </button>
-                <a href="#" id="viewBookmark" class="toolbarButton bookmark hiddenSmallView" title="Current view (copy or open in new window)" tabindex="35" data-l10n-id="bookmark">
+                <button id="viewBookmark" class="toolbarButton bookmark hiddenSmallView" title="Current view (copy or open in new window)" tabindex="35" data-l10n-id="bookmark">
                   <span data-l10n-id="bookmark_label">Current View</span>
-                </a>
+                </button>
 
                 <div class="verticalToolbarSeparator hiddenSmallView"></div>
 
