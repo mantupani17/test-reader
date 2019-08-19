@@ -13,7 +13,7 @@
  * limitations under the License.
  */
 
-.textLayer {
+ .textLayer {
   position: absolute;
   left: 0;
   top: 0;
@@ -1351,6 +1351,14 @@ html[dir="ltr"] #viewOutline.toolbarButton::before {
 }
 html[dir="rtl"] #viewOutline.toolbarButton::before {
   content: url(images/toolbarButton-viewOutline-rtl.png);
+}
+
+html[dir="rtl"] #viewNotes.toolbarButton::before {
+  content: url(images/toolbarButton-viewOutline-rtl.png);
+}
+
+#viewNotes.toolbarButton::before {
+  content: url(images/toolbarButton-viewAttachments.png);
 }
 
 #viewAttachments.toolbarButton::before {
