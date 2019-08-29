@@ -854,7 +854,6 @@
       throw new Error('Not implemented: initPassiveLoading');
     },
     setTitleUsingUrl: function setTitleUsingUrl() {
-      // console.log('fuck
       return 
       var url = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : '';
       this.url = url;
@@ -875,7 +874,6 @@
       if (this.isViewerEmbedded) {
         return;
       }
-      console.log('fuck')
       document.title = title;
     },
     close: function () {
@@ -1473,7 +1471,7 @@
     },
     setInitialView: function setInitialView(storedHash) {
       var _this6 = this;
-      return;
+      // return;
       var _ref7 = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {},
           rotation = _ref7.rotation,
           sidebarView = _ref7.sidebarView,
@@ -1855,9 +1853,9 @@
         });
       }
     }, true);
-    appConfig.sidebar.toggleButton.addEventListener('click', function () {
-      PDFViewerApplication.pdfSidebar.toggle();
-    });
+    // appConfig.sidebar.toggleButton.addEventListener('click', function () {
+    //   PDFViewerApplication.pdfSidebar.toggle();
+    // });
   
     try {
       // webViewerOpenFileViaURL(file);
@@ -2086,10 +2084,10 @@
       }
   
       var appConfig = PDFViewerApplication.appConfig;
-      appConfig.toolbar.viewBookmark.setAttribute('hidden', 'true');
-      appConfig.secondaryToolbar.viewBookmarkButton.setAttribute('hidden', 'true');
-      appConfig.toolbar.download.setAttribute('hidden', 'true');
-      appConfig.secondaryToolbar.downloadButton.setAttribute('hidden', 'true');
+      // appConfig.toolbar.viewBookmark.setAttribute('hidden', 'true');
+      // appConfig.secondaryToolbar.viewBookmarkButton.setAttribute('hidden', 'true');
+      // appConfig.toolbar.download.setAttribute('hidden', 'true');
+      // appConfig.secondaryToolbar.downloadButton.setAttribute('hidden', 'true');
     };
   }
   
@@ -4748,12 +4746,12 @@
       key: "reset",
       value: function reset() {
         this.isInitialViewSet = false;
+        // console.log('helll')
+        // this._hideUINotification(null);
   
-        this._hideUINotification(null);
-  
-        this.switchView(SidebarView.THUMBS);
-        this.outlineButton.disabled = false;
-        this.attachmentsButton.disabled = false;
+        // this.switchView(SidebarView.THUMBS);
+        // this.outlineButton.disabled = false;
+        // this.attachmentsButton.disabled = false;
       }
     }, {
       key: "setInitialView",
@@ -6684,9 +6682,9 @@
           }
   
           if (cmd === 'find') {
+            
             _this._findTimeout = setTimeout(function () {
               _this._nextMatch();
-  
               _this._findTimeout = null;
             }, FIND_TIMEOUT);
           } else if (_this._dirtyMatch) {
@@ -6997,9 +6995,9 @@
           });
         };
   
-        // for (var i = 0, ii = this._linkService.pagesCount; i < ii; i++) {
-        //   // _loop(i, ii);
-        // }
+        for (var i = 0, ii = this._linkService.pagesCount; i < ii; i++) {
+          _loop(i, ii);
+        }
       }
     }, {
       key: "_updatePage",
@@ -7030,7 +7028,7 @@
         var currentPageIndex = this._linkService.page - 1;
         var numPages = this._linkService.pagesCount;
         this._highlightMatches = true;
-        return true
+        
         if (this._dirtyMatch) {
           this._dirtyMatch = false;
           this._selected.pageIdx = this._selected.matchIdx = -1;
@@ -7041,7 +7039,6 @@
           this._pageMatches.length = 0;
           this._pageMatchesLength.length = 0;
           this._matchesCountTotal = 0;
-  
           this._updateAllPages();
   
           for (var i = 0; i < numPages; i++) {
@@ -11857,7 +11854,6 @@
         }
   
         var textLayer = null;
-  
         if (this.textLayerMode !== _ui_utils.TextLayerMode.DISABLE && this.textLayerFactory) {
           var textLayerDiv = document.createElement('div');
           textLayerDiv.className = 'textLayer';
@@ -12797,9 +12793,8 @@
       key: "_bindClickListeners",
       value: function _bindClickListeners() {
         var _this2 = this;
-  
+        return
         this.toggleButton.addEventListener('click', this.toggle.bind(this));
-  
         var _loop = function _loop(button) {
           var _this2$buttons$button = _this2.buttons[button],
               element = _this2$buttons$button.element,
@@ -13155,7 +13150,6 @@
       this.items = options;
       this._wasLocalized = false;
       this.reset();
-  
       this._bindListeners();
     }
   
@@ -13164,7 +13158,6 @@
       value: function setPageNumber(pageNumber, pageLabel) {
         this.pageNumber = pageNumber;
         this.pageLabel = pageLabel;
-  
         this._updateUIState(false);
       }
     }, {
@@ -13232,21 +13225,44 @@
         //     value: this.value
         //   });
         // });
-        items.scaleSelect.addEventListener('change', function () {
-          if (this.value === 'custom') {
+  
+        
+  
+        // items.scaleSelect.addEventListener('change', function () {
+        //   if (this.value === 'custom') {
+        //     return;
+        //   }
+  
+        //   eventBus.dispatch('scalechanged', {
+        //     source: self,
+        //     value: this.value
+        //   });
+        // });
+  
+        // For custom event handling instead of change using click
+        items.scaleSelect.addEventListener('click', function () {
+          var option = this.value;
+          if (option === 'custom') {
             return;
           }
-  
           eventBus.dispatch('scalechanged', {
             source: self,
-            value: this.value
+            value: option
           });
+          if(option == 'page-fit'){
+              this.value = 'page-width';
+              this.title = 'Page Width';
+          }else{
+              this.value = 'page-fit'
+              this.title = 'Page Fit';
+          }
         });
-        items.presentationModeButton.addEventListener('click', function () {
-          eventBus.dispatch('presentationmode', {
-            source: self
-          });
-        });
+  
+        // items.presentationModeButton.addEventListener('click', function () {
+        //   // eventBus.dispatch('presentationmode', {
+        //   //   source: self
+        //   // });
+        // });
         items.openFile.addEventListener('click', function () {
           eventBus.dispatch('openfile', {
             source: self
@@ -13257,11 +13273,11 @@
             source: self
           });
         });
-        items.download.addEventListener('click', function () {
-          eventBus.dispatch('download', {
-            source: self
-          });
-        });
+        // items.download.addEventListener('click', function () {
+        //   eventBus.dispatch('download', {
+        //     source: self
+        //   });
+        // });
         items.scaleSelect.oncontextmenu = _ui_utils.noContextMenuHandler;
         eventBus.on('localized', function () {
           _this._localized();
@@ -13328,7 +13344,9 @@
         }, '{{scale}}%').then(function (msg) {
           var options = items.scaleSelect.options;
           var predefinedValueFound = false;
-  
+          // Added custom code after changing(change event) the select to button(click)
+          // so these codes uncomment when use select element instead of button
+          return
           for (var i = 0, ii = options.length; i < ii; i++) {
             var option = options[i];
   
@@ -13357,6 +13375,7 @@
     }, {
       key: "_adjustScaleWidth",
       value: function _adjustScaleWidth() {
+        return
         var container = this.items.scaleSelectContainer;
         var select = this.items.scaleSelect;
   
