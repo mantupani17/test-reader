@@ -1,0 +1,64 @@
+<!DOCTYPE >
+<html>
+<head>
+<title>{{title}}</title>
+<link rel='stylesheet' href="{{ assetsUrl('assets/font/fa.css')}}">
+<link rel='stylesheet' href="{{ assetsUrl('assets/font/google-font.css')}}">
+<link rel='stylesheet' href="{{ assetsUrl('assets/bootstrap/bootstrap.4.css') }}">
+<link rel='stylesheet' href="{{ assetsUrl('assets/quiz/quiz.css') }}">
+</head>
+<body>
+    <div class="quiz-box-container">
+        <div class="wrapper">
+            <div class="quiz-box">
+                <div class="name-box">
+                    <span>Your Name?</span>
+                    </br>
+                    <form id="name-form">
+                        <input type="text" id="name-input-box" />
+                        </br>
+                        <button type="submit" id="name-submit-button">Submit</button>
+                    </form>
+                </div>
+                <div id="question-box">
+                </div>
+                <div id="result">
+                    <div class="score-label">
+                        <h1><i class="smiley"></i></h1>
+                    </div>
+                    <div>
+                        <div class="score-detail">
+                            <h3></h3>
+                        </div>
+                        <div class="chart">
+                            <div class="percentage" data-percent="100">
+                                <span></span><sup>%</sup>
+                            </div>
+                        </div>
+                        <h3 class="message"></h3>
+                    </div>
+                </div>
+                <div id="result-stats">
+                    <table>
+                        <tr>
+                            <th>Question</th>
+                            <th>You Selected</th>
+                            <th>Correct Answer</th>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+            <div class="navigation-buttons">
+                <button id="prevButton">Previous</button>
+                <button id="nextButton">Next</button>
+                <button id="submitButton">Submit</button>
+                <button id="resultButton">Results</button>
+            </div>
+        </div>
+    </div>
+    </div>
+</body>
+<script type="text/javascript" src="{{ assetsUrl('assets/js/jquery.min.js') }}"></script>
+<script type="text/javascript" src="{{ assetsUrl('assets/quiz/quiz.js') }}"></script>
+
+</html>
