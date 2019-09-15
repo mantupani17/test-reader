@@ -2,42 +2,12 @@
     var colors = ['#16a085', '#27ae60', '#2c3e50', '#f39c12', '#e74c3c', '#9b59b6', '#FB6964', "#472E32", "#FF4136", "#39CCCC", "#BDBB99", "#77B1A9", "#73A857"];
     var username = '';
     var myColor;
-    var all_questions = [
-        {
-            question_string: "Javascript is _________ language.",
-            choices: {
-                correct: "Scripting",
-                wrong: ["Programming", "Application", "None of These"]
-            }
-        }, {
-            question_string: "JavaScript is ______ Side Scripting Language.",
-            choices: {
-                correct: "Browser",
-                wrong: ["Server", "ISP", "None of These"]
-            }
-        }, {
-            question_string: "Which HTML attribute is used to define inline styles?",
-            choices: {
-                correct: "style",
-                wrong: ["font", "class", "styles"]
-            }
-        }, {
-            question_string: 'What does CSS stand for?',
-            choices: {
-                correct: "Cascading Style Sheets",
-                wrong: ["Computer Style Sheets", "Colorful Style Sheets", "Creative Style Sheets"]
-            }
-        }, {
-            question_string: 'Who is making the Web standards?',
-            choices: {
-                correct: "W3C",
-                wrong: ["Mozilla", "Microsoft", "Google"]
-            }
-        }
-    ];
+    var all_questions = [];
+    var all_questions_data = [];
+    var myStorage = window.localStorage;
 
     var task = {
-        allQuestionsData : [],
+        
         getAassessmentQuestions: function(data){
             return $.ajax({
                 type:'GET',
@@ -49,8 +19,7 @@
         allQuestions : function(){
             task.getAassessmentQuestions().done(function(response){
                 if(response.status == true){
-                    console.log(response)
-                    task.allQuestionsData = response.data;
+                    all_questions_data = response.data;
                 }
             })
         }
@@ -61,14 +30,13 @@
         myColor = colors[Math.floor(Math.random() * colors.length)];
         $('body').css('background-color', myColor);
         $('.quiz-box').css('color', '#fff');
-        //$('.option-input:checked::after').css('background', myColor);
+        $('.option-input:checked::after').css('background', myColor);
     };
 
     // An object for a Quiz, which will contain Question objects.
     var Quiz = function(quiz_name) {
         // Private fields for an instance of a Quiz object.
         this.quiz_name = quiz_name;
-
         // This one will contain an array of Question objects in the order that the questions will be presented.
         this.questions = [];
     }
@@ -98,7 +66,6 @@
 
         // Helper function for changing the question and updating the buttons
         function change_question() {
-
             self.questions[current_question_index].render(question_container);
             $('#prevButton').prop('disabled', current_question_index === 0);
             $('#nextButton').prop('disabled', current_question_index === self.questions.length - 1);
@@ -115,13 +82,18 @@
         }
 
         // Render the first question
+        var qindex = myStorage.getItem('qindex');
         var current_question_index = 0;
+        if(typeof qindex != undefined && qindex != null){
+            current_question_index = qindex;
+        }
+        
         change_question();
 
         // Add listener for the previous question button
         $('#prevButton').click(function() {
             if (current_question_index > 0) {
-                current_question_index--;
+                myStorage.setItem('qindex' , current_question_index--);
                 change_question();
             }
         });
@@ -129,7 +101,7 @@
         // Add listener for the next question button
         $('#nextButton').click(function() {
             if (current_question_index < self.questions.length - 1) {
-                current_question_index++;
+                myStorage.setItem('qindex' , current_question_index++);
                 change_question();
                 changeColor();
             }
@@ -152,7 +124,6 @@
             var scoremessage = score + " Out of " + self.questions.length + " questions were correct.";
             var icon = '';
             var chartcolor = '';
-            console.log(percentage);
 
             $('.percentage').data('percent', percentage * 100);
             $('.percentage span').text(percentage);
@@ -234,6 +205,7 @@
     }
 
     var Question = function(count, question_string, correct_choice, wrong_choices) {
+        
         this.question_string = count + ". " + question_string;
         this.choices = [];
         this.user_choice_index = null; // Index of the user's choice selection
@@ -242,16 +214,19 @@
         this.correct_choice_index = Math.floor(Math.random() * wrong_choices.length + 1);
         var number_of_choices = wrong_choices.length + 1;
         for (var i = 0; i < number_of_choices; i++) {
+            
             if (i === this.correct_choice_index)
                 this.choices[i] = correct_choice;
             else {
                 var wrong_choice_index = Math.floor(Math.random(0, wrong_choices.length));
                 this.choices[i] = wrong_choices[wrong_choice_index];
-
+                // console.log(wrong_choices)
                 // Remove the wrong choice from the wrong choice array so that we don't pick it again
                 wrong_choices.splice(wrong_choice_index, 1);
             }
         }
+        
+       
     }
         
     // A function that you can enact on an instance of a question object. This function is called render() and takes in a variable called the container, which is the <div> that I will render the question in. This question will "return" with the score when the question has been answered.
@@ -308,35 +283,42 @@
             container.trigger('user-select-change');
         });
     }
-    task.allQuestions();
-
-    $(document).ready(function() {
-        changeColor();
-        
-        // all_questions = task.all_questions;
-        $('#name-input-box').css('border-bottom', 'solid thin ' + myColor);
-        var quiz = new Quiz('My Quiz');
-        for (var i = 0; i < all_questions.length; i++) {
-            var question = new Question((i + 1), all_questions[i].question_string, all_questions[i].choices.correct, all_questions[i].choices.wrong);
-
-            // Add the question to the instance of the Quiz object that we created previously
-            quiz.add_question(question);
-        }
-        // Render the quiz
-        var quiz_container = $('#question-box');
-        $('.navigation-buttons').hide();
-        $('#result').hide();
-        $('#result-stats').hide();
-        $('#name-form').on('submit', function(event) {
-            event.preventDefault();
-            username = $('#name-input-box').val();
-            if (username !== '' && username !== undefined) {
-                $('.name-box').hide();
-                quiz.render(quiz_container);
-                $('.navigation-buttons').show();
-                $('#resultButton').hide();
+    
+    // $(document).ready(function() {
+    changeColor();
+    $.ajax({
+        type:'GET',
+        url:'/api/quiz/all',
+        dataType:'json',
+        success: function(data){
+            all_questions = data.data;
+            $('#name-input-box').css('border-bottom', 'solid thin ' + myColor);
+            var quiz = new Quiz('My Quiz');
+            for (var i = 0; i < all_questions.length; i++) {
+                var question = new Question((i + 1), all_questions[i].question_string, all_questions[i].choices.correct, all_questions[i].choices.wrong);
+                // Add the question to the instance of the Quiz object that we created previously
+                quiz.add_question(question);
             }
-        });
-    });
+            // Render the quiz
+            var quiz_container = $('#question-box');
+            $('.navigation-buttons').hide();
+            $('#result').hide();
+            $('#result-stats').hide();
+            
+            $('#name-form').on('submit', function(event) {
+                event.preventDefault();
+                username = $('#name-input-box').val();
+                if (username !== '' && username !== undefined) {
+                    $('.name-box').hide();
+                    quiz.render(quiz_container);
+                    $('.navigation-buttons').show();
+                    $('#resultButton').hide();
+                }
+            });
+        }
+    })
+    
+    
+    // });
 
 })(jQuery);

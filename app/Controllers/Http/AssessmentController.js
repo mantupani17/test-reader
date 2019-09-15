@@ -35,6 +35,25 @@ const questions = [
     }
 ]
 
+const questionColl = [
+    {
+        objId:'',
+        type:'MCQ',
+        question:'',
+        option1:'',
+        option2:'',
+        option3:'',
+        option4:'',
+        option5:'',
+        answer:'option',
+        subject:'',
+        class:'',
+        category:'',
+        mark:1,
+        negMark:1,        
+    }
+]
+
 class AssessmentController extends BaseController{
     async getAllQuestions({requset, response}){
         try {
