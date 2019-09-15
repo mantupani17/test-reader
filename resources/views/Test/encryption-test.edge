@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html>
+    
+<head>
+	<title>Login</title>
+	<link rel='stylesheet' href="{{ assetsUrl('assets/bootstrap/bootstrap.4.css') }}">
+    <script type="text/javascript" src="{{ assetsUrl('assets/js/jquery.min.js') }}"></script>
+    <script src="{{ assetsUrl('assets/bootstrap/bootstrap.min.js')}}"></script>
+    <link rel="stylesheet" href="{{ assetsUrl('assets/font/all.css')}}" >
+    <link rel="stylesheet" href="{{ assetsUrl('assets/custom/login.css')}}">
+</head>
+<!--Coded with love by Mutiullah Samim-->
+<body>
+	<div class="container h-100">
+		<div class="d-flex justify-content-center h-100">
+			<div class="user_card">
+				<div class="d-flex justify-content-center">
+					<div class="brand_logo_container">
+						<img src="https://cdn.freebiesupply.com/logos/large/2x/pinterest-circle-logo-png-transparent.png" class="brand_logo" alt="Logo">
+					</div>
+				</div>
+				<div class="d-flex justify-content-center form_container">
+					<form name="encrypt-content">
+						<div class="input-group mb-3">
+							<div class="input-group-append">
+								<span class="input-group-text"><i class="fas fa-user"></i></span>
+							</div>
+							<input type="text" name="name" class="form-control input_user" value="" placeholder="username">
+						</div>
+						<div class="input-group mb-2">
+							<div class="input-group-append">
+								<span class="input-group-text"><i class="fas fa-key"></i></span>
+							</div>
+							<input type="password" name="password" class="form-control input_pass" value="" placeholder="password">
+						</div>
+						<div class="form-group">
+							<div class="custom-control custom-checkbox">
+								<input type="checkbox" class="custom-control-input" id="customControlInline">
+								<label class="custom-control-label" for="customControlInline">Remember me</label>
+							</div>
+                        </div>
+                        {{ csrfField() }}
+					</form>
+				</div>
+				<div class="d-flex justify-content-center mt-3 login_container">
+					<button type="button" name="button" class="btn login_btn" id="text-btn">Login</button>
+				</div>
+				<div class="mt-4">
+					<div class="d-flex justify-content-center links">
+						Don't have an account? <a href="#" class="ml-2">Sign Up</a>
+					</div>
+					<div class="d-flex justify-content-center links">
+						<a href="#">Forgot your password?</a>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</body>
+<script src="{{ assetsUrl('assets/js/app.js')}}"></script>
+<script src="{{ assetsUrl('assets/js/sha2561.js')}}"></script>
+<script>
+    $(document).ready(function(e){
+        $('#text-btn').on('click', function(e){
+            var formData = $('form[name="encrypt-content"]').serializeObject();
+            var hashText = sha256(formData.name); 
+            console.log(hashText)
+            $.ajax({
+                url:'/api/encrypt/encryption',
+                type:'POST',
+                data:formData,
+                success: function(data){
+                    var formdata = data.data;
+                    var token = "{{csrfToken}}"
+                    formdata._csrf = token;
+                    console.log(formdata)
+                    // $.ajax({
+                    //     url:'/api/encrypt/decryption',
+                    //     type:'POST',
+                    //     data:formdata,
+                    //     success:function(data){
+                    //         console.log(data)
+                    //     }
+                    // })
+                }
+            })
+        })
+    })
+</script>
+</html>

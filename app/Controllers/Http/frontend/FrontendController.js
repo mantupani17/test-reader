@@ -15,6 +15,19 @@ class FrontendController extends BaseController{
             })
         }
     }
+
+    // Encryption and decryption testing
+    async renderEncryptionTestPage({request, response, view}){
+        try {
+            return view.render('Test/encryption-test' , {title:'Quiz'})
+        } catch (error) {
+            console.log(error)
+            response.send({
+                status:false,
+                message:'OOPS'
+            })
+        }
+    }
 }
 
 module.exports = FrontendController
