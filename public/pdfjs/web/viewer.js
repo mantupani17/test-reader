@@ -854,7 +854,6 @@
       throw new Error('Not implemented: initPassiveLoading');
     },
     setTitleUsingUrl: function setTitleUsingUrl() {
-      return 
       var url = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : '';
       this.url = url;
       this.baseUrl = url.split('#')[0];
@@ -870,7 +869,6 @@
       this.setTitle(title);
     },
     setTitle: function setTitle(title) {
-      return
       if (this.isViewerEmbedded) {
         return;
       }
@@ -4920,7 +4918,6 @@
         var pdfViewer = this.pdfViewer,
             pdfThumbnailViewer = this.pdfThumbnailViewer;
         var pagesCount = pdfViewer.pagesCount;
-        return
         for (var pageIndex = 0; pageIndex < pagesCount; pageIndex++) {
           var pageView = pdfViewer.getPageView(pageIndex);
   
@@ -5263,7 +5260,7 @@
       kind: OptionKind.WORKER
     },
     workerSrc: {
-      value: '/assets/pdfjs/build/pdf.worker.js',
+      value: '/pdfjs/build/pdf.worker.js',
       kind: OptionKind.WORKER
     }
   };
@@ -10412,7 +10409,7 @@
             }
           };
         };
-  
+        
         var firstPagePromise = pdfDocument.getPage(1);
         this.firstPagePromise = firstPagePromise;
         firstPagePromise.then(function (pdfPage) {
@@ -10421,7 +10418,7 @@
             scale: scale * _ui_utils.CSS_UNITS
           });
   
-          for (var pageNum = 1; pageNum <= 1; ++pageNum) {
+          for (var pageNum = 1; pageNum <= pagesCount; ++pageNum) {
             var textLayerFactory = null;
   
             if (_this2.textLayerMode !== _ui_utils.TextLayerMode.DISABLE) {
@@ -10466,7 +10463,7 @@
             var _loop = function _loop(_pageNum) {
               pdfDocument.getPage(_pageNum).then(function (pdfPage) {
                 var pageView = _this2._pages[_pageNum - 1];
-  
+                console.log(pageView)
                 if (!pageView.pdfPage) {
                   pageView.setPdfPage(pdfPage);
                 }
@@ -10485,7 +10482,7 @@
               });
             };
   
-            for (var _pageNum = 1; _pageNum <= 1; ++_pageNum) {
+            for (var _pageNum = 1; _pageNum <= pagesCount; ++_pageNum) {
               _loop(_pageNum);
             }
           });

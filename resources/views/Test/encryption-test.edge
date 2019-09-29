@@ -62,9 +62,9 @@
 <script>
     $(document).ready(function(e){
         $('#text-btn').on('click', function(e){
-            var formData = $('form[name="encrypt-content"]').serializeObject();
-            var hashText = sha256(formData.name); 
-            console.log(hashText)
+			var formData = $('form[name="encrypt-content"]').serializeObject();
+			formData.name =  sha256(formData.name); 
+            // console.log(hashText)
             $.ajax({
                 url:'/api/encrypt/encryption',
                 type:'POST',

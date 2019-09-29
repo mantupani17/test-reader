@@ -57,10 +57,11 @@ class AuthController extends BaseController {
             // await Encryption.encryptionTechniques()
             const postData = request.all()
             const username = postData.name
+            console.log(username)
             const password = postData.password
             const encryptName = await Encryption.encrypt(username)
             const decryptName = await Encryption.decrypt(encryptName)
-            // console.log(decryptName)
+            console.log(decryptName)
             const encryptPassword = await Encryption.encrypt(password)
             response.send({
                 message:'Encryption is done',

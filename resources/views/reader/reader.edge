@@ -20,15 +20,14 @@
   <!--#include viewer-snippet-chrome-extension.html-->
   <!--#endif-->
   <!--<link rel="stylesheet" href="{{ assetsUrl('assets/vendors/fontawesome/css/font-awesome.min.css')}}">-->
-  <link class="skin" rel="stylesheet" type="text/css"
-    href="{{ assetsUrl('assets/vendors/fontawesome5_0/css/all.css') }}">
-  <link rel="stylesheet" href="{{ assetsUrl('assets/pdfjs/web/viewer.css')}}">
-  <link rel="stylesheet" href="{{ assetsUrl('assets/css/jquery.ui.css')}}">
-  <link rel="stylesheet" href="{{ assetsUrl('assets/css/color-picker.css')}}">
-  <link rel="stylesheet" href="{{ assetsUrl('assets/pdfjs/css/note.css')}}">
+  <link class="skin" rel="stylesheet" type="text/css" href="{{ assetsUrl('assets/font/all.css') }}">
+  <link rel="stylesheet" href="{{ assetsUrl('pdfjs/web/viewer.css')}}">
+  <!--link rel="stylesheet" href="{{ assetsUrl('assets/css/jquery.ui.css')}}"-->
+  <!--link rel="stylesheet" href="{{ assetsUrl('css/color-picker.css')}}"-->
+  <link rel="stylesheet" href="{{ assetsUrl('pdfjs/css/note.css')}}">
 
   <!--#if !PRODUCTION-->
-  <link rel="resource" type="application/l10n" href="{{ assetsUrl('assets/pdfjs/web/locale/locale.properties')}}">
+  <link rel="resource" type="application/l10n" href="{{ assetsUrl('pdfjs/web/locale/locale.properties')}}">
   <!--#endif-->
 
   <!--#if !PRODUCTION-->
@@ -41,39 +40,43 @@
   <!--#endif-->
 
   <!--#if !MINIFIED -->
-  <script type="text/javascript" src="{{ assetsUrl('assets/pdfjs/build/pdf.js')}}"></script>
-  <script type="text/javascript" src="{{ assetsUrl('assets/pdfjs/web/viewer.js')}}"></script>
+  <script type="text/javascript" src="{{ assetsUrl('pdfjs/build/pdf.js')}}"></script>
+  <script type="text/javascript" src="{{ assetsUrl('pdfjs/web/viewer.js')}}"></script>
+  <!--script type="text/javascript" src="{{ assetsUrl('pdfjs/web/viewer-test.js')}}"></script-->
   <script type="text/javascript" src="{{ assetsUrl('assets/js/jquery.min.js')}}"></script>
-  <script type="text/javascript" src="{{ assetsUrl('assets/pdfjs/js/jquery.mark.js')}}"></script>
-  <script type="text/javascript" src="{{ assetsUrl('assets/pdfjs/js/swipetouch.js')}}"></script>
+  <script type="text/javascript" src="{{ assetsUrl('pdfjs/js/jquery.mark.js')}}"></script>
+  <script type="text/javascript" src="{{ assetsUrl('pdfjs/js/swipetouch.js')}}"></script>
   <script src="{{ assetsUrl('assets/js/jquery.ui.js')}}"></script>
-  <script type="text/javascript" src="{{ assetsUrl('assets/pdfjs/js/jspdf.debug.js')}}"></script>
-  <script type="text/javascript" src="{{ assetsUrl('assets/js/color-picker.js')}}"></script>
-  <script type="text/javascript" src="{{ assetsUrl('assets/reader/reader-custom.js')}}"></script>
+  <script type="text/javascript" src="{{ assetsUrl('pdfjs/js/jspdf.debug.js')}}"></script>
+  <!--script type="text/javascript" src="{{ assetsUrl('assets/js/color-picker.js')}}"></script-->
+  <script type="text/javascript" src="{{ assetsUrl('reader/reader-custom.js')}}"></script>
 
   <script>
     $(document).ready(function () {
       var itemCode = '{{itemcode}}';
       var bgColor = '{{user.settings.readerBgColor}}}' == undefined ? '0,0,93.7' : '{{user.settings.readerBgColor}}}';
       // console.log(userSetting)
-      var metaData = '';
+     
       var options = {
         basePath: ''
       };
+
       $.ajax({
         url: '/api/media/metadata/' + itemCode,
         type: 'GET',
         dataType: 'json',
         success: function (data) {
-          pdfMetaData = data.metaData;
-          pdfMetaData.pdfData = itemCode;
-          Annotation.init(pdfMetaData);
-          $('#fileNameField').text(pdfMetaData.file);
-          $('#fileSizeField').text(0)
-          $('#titleField').text(pdfMetaData.title)
-          $('#authorField').text(pdfMetaData.autho)
-          $('#pageCountField').text(pdfMetaData.totalpages)
-          $('#titleField').text(pdfMetaData.title)
+          var metaData = {};
+          metaData = data.metadata;
+          // '/api/media/reader?fileName='
+          metaData.load_url = '/api/media/reader?fileName='+metaData.mainFile
+          Annotation.init(metaData);
+          // $('#fileNameField').text(pdfMetaData.file);
+          // $('#fileSizeField').text(0)
+          // $('#titleField').text(pdfMetaData.title)
+          // $('#authorField').text(pdfMetaData.autho)
+          // $('#pageCountField').text(pdfMetaData.totalpages)
+          // $('#titleField').text(pdfMetaData.title)
         }
       })
 

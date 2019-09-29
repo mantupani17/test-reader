@@ -28,6 +28,20 @@ class FrontendController extends BaseController{
             })
         }
     }
+
+    async manageQuiz({request, response, view}){
+        try {
+            return view.render('quiz/manage-quiz' , {title:'Manage Quiz'})
+        } catch (error) {
+            console.log(error)
+            response.send({
+                status:false,
+                message:'OOPS' + error
+            })
+        }
+    }
+
+
 }
 
 module.exports = FrontendController

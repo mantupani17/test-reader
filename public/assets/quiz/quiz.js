@@ -8,21 +8,25 @@
 
     var task = {
         
-        getAassessmentQuestions: function(data){
+        initializeQuiz: function(data){
             return $.ajax({
-                type:'GET',
-                url:'/api/quiz/all',
+                type:'POST',
+                url:'/api/quiz/initialize',
+                data:data,
                 dataType:'json'
             })
         },
 
-        allQuestions : function(){
-            task.getAassessmentQuestions().done(function(response){
-                if(response.status == true){
-                    all_questions_data = response.data;
-                }
+        saveResult: function(data){
+            return $.ajax({
+                type:'POST',
+                url:'/api/quiz/save-result',
+                data:data,
+                dataType:'json'
             })
         }
+
+        
     }
 
 
@@ -34,11 +38,16 @@
     };
 
     // An object for a Quiz, which will contain Question objects.
-    var Quiz = function(quiz_name) {
+    var Quiz = function(quiz_name,  quizId, userId, username) {
         // Private fields for an instance of a Quiz object.
         this.quiz_name = quiz_name;
         // This one will contain an array of Question objects in the order that the questions will be presented.
         this.questions = [];
+        this.quizQuistions = [];
+        this.title = quiz_name;
+        this.quizId = quizId;
+        this.userId = userId;
+        this.username = username;
     }
         // A function that you can enact on an instance of a quiz object. This function is called add_question() and takes in a Question object which it will add to the questions field.
     Quiz.prototype.add_question = function(question) {
@@ -49,12 +58,9 @@
     }
 
     Quiz.prototype.render = function(container) {
-
         changeColor();
-
         // For when we're out of scope
         var self = this;
-
         // Hide the quiz results modal
         //$('#quiz-results').hide();
 
@@ -82,18 +88,14 @@
         }
 
         // Render the first question
-        var qindex = myStorage.getItem('qindex');
         var current_question_index = 0;
-        if(typeof qindex != undefined && qindex != null){
-            current_question_index = qindex;
-        }
         
         change_question();
 
         // Add listener for the previous question button
         $('#prevButton').click(function() {
             if (current_question_index > 0) {
-                myStorage.setItem('qindex' , current_question_index--);
+                current_question_index--;
                 change_question();
             }
         });
@@ -101,7 +103,7 @@
         // Add listener for the next question button
         $('#nextButton').click(function() {
             if (current_question_index < self.questions.length - 1) {
-                myStorage.setItem('qindex' , current_question_index++);
+                current_question_index++
                 change_question();
                 changeColor();
             }
@@ -112,19 +114,41 @@
             changeColor();
             // Determine how many questions the user got right
             var score = 0;
+            var notAttempt = 0;
+            var correctAnser = 0;
             for (var i = 0; i < self.questions.length; i++) {
+                self.quizQuistions[i] = {
+                    question_string:self.questions[i].question_string,
+                    userAnswer:self.questions[i].user_choice_index,
+                    correctAnser:self.questions[i].correct_choice_index
+                }
                 if (self.questions[i].user_choice_index === self.questions[i].correct_choice_index) {
                     score++;
+                    correctAnser++;
+                }
+                if (self.questions[i].user_choice_index !== null) {
+                    notAttempt++;
                 }
             }
 
             // Display the score with the appropriate message
             var percentage = (score / self.questions.length);
 
+            var quizResults = {
+                totalQuestions:self.questions.length, attemptedQuestions:notAttempt, correctAnswer:correctAnser, percentage:percentage * 100
+            }
+            var data = {
+                questions:self.quizQuistions,
+                quizResults:quizResults,
+                title:self.title,
+                quizId:self.quizId,
+                userId: self.userId,
+                username: self.username
+            }
+            task.saveResult(data)
             var scoremessage = score + " Out of " + self.questions.length + " questions were correct.";
             var icon = '';
             var chartcolor = '';
-
             $('.percentage').data('percent', percentage * 100);
             $('.percentage span').text(percentage);
 
@@ -288,12 +312,21 @@
     changeColor();
     $.ajax({
         type:'GET',
-        url:'/api/quiz/all',
+        url:'/api/quiz/get',
         dataType:'json',
-        success: function(data){
-            all_questions = data.data;
+        data:{_id:"5d90906b59c8a8155035c450"},
+        success: function(response){
+            if(response.status == false){
+                return false
+            }
+            if(response.data.length > 0){
+                var data = response.data[0]
+                all_questions = data.questions;
+                task.initializeQuiz({_id:"5d90906b59c8a8155035c450", "userId":'5d3da4f54bf76e06501a53a7', "title":data.title})
+            }
+            
             $('#name-input-box').css('border-bottom', 'solid thin ' + myColor);
-            var quiz = new Quiz('My Quiz');
+            var quiz = new Quiz(data.title, "5d90906b59c8a8155035c450", '5d3da4f54bf76e06501a53a7' , $('#name-input-box').val() );
             for (var i = 0; i < all_questions.length; i++) {
                 var question = new Question((i + 1), all_questions[i].question_string, all_questions[i].choices.correct, all_questions[i].choices.wrong);
                 // Add the question to the instance of the Quiz object that we created previously

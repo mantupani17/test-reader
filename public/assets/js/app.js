@@ -14,5 +14,25 @@
         });
         return o;
     };
-    
+    $.app = {
+        createQuiz: function(data){
+            data = data || {}
+            return $.ajax({
+                type:"POST",
+                url:"/api/quiz/create",
+                data:data,
+                dataType:'json'
+            })
+        },
+        
+        getQuizs: function(data){
+            data = data || {}
+            return $.ajax({
+                type:"GET",
+                url:"/api/quiz/get",
+                data:data,
+                dataType:'json'
+            })
+        }
+    }
 })(jQuery);

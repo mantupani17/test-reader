@@ -134,7 +134,7 @@ module.exports = {
   csrf: {
     enable: false,
     methods: ['POST', 'PUT', 'DELETE'],
-    filterUris: [],
+    filterUris: ['/api/quiz/initialize','/api/quiz/save-result'],
     cookieOptions: {
       httpOnly: false,
       sameSite: true,

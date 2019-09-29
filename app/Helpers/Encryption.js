@@ -4,8 +4,8 @@ const crypto = require('crypto');
 const algorithm = 'aes-256-cbc';
 const key = crypto.randomBytes(32);
 const iv = crypto.randomBytes(16);
-const Encryption = {
 
+const Encryption = {
     async encryptionTechniques(){
         console.log(crypto.getCiphers())
         console.log(crypto.getHashes())

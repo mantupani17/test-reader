@@ -1,0 +1,148 @@
+<!DOCTYPE >
+<html>
+<head>
+<title>{{title}}</title>
+<link rel='stylesheet' href="{{ assetsUrl('assets/font/fa.css')}}">
+<link rel='stylesheet' href="{{ assetsUrl('assets/font/google-font.css')}}">
+<link rel='stylesheet' href="{{ assetsUrl('assets/bootstrap/bootstrap.4.css') }}">
+<link rel='stylesheet' href="{{ assetsUrl('assets/quiz/manage-quiz.css') }}">
+<script type="text/javascript" src="{{ assetsUrl('assets/js/jquery.min.js') }}"></script>
+<script type="text/javascript" src="{{ assetsUrl('assets/bootstrap/bootstrap.min.js') }}"></script>
+<script type="text/javascript" src="{{ assetsUrl('assets/js/app.js') }}"></script>
+</head>
+<body>
+    <div class="container register">
+        <div class="row">
+            <div class="col-md-3 register-left">
+                <img src="https://image.ibb.co/n7oTvU/logo_white.png" alt=""/>
+                <h3>Welcome</h3>
+                <p>You are 30 seconds away from earning your own money!</p>
+                <input type="submit" name="" value="Login"/><br/>
+            </div>
+            <div class="col-md-9 register-right">
+                    <ul class="nav nav-tabs nav-justified" id="myTab" role="tablist">
+                        <li class="nav-item">
+                            <a class="nav-link active" id="home-tab" data-toggle="tab" href="#home" role="tab" aria-controls="home" aria-selected="true">Create Assessment</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" id="profile-tab" data-toggle="tab" href="#profile" role="tab" aria-controls="profile" aria-selected="false">Filter</a>
+                        </li>
+                    </ul>
+                    <div class="tab-content" id="myTabContent">
+                            <div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
+                                <h3 class="register-heading">Create Assessment</h3>
+                                <div class="row register-form">
+                                    <div class="col-md-6">
+                                        <form id="create-quiz">
+                                            <div class="form-group">
+                                                <input type="text" name="title" class="form-control" placeholder="title *" value="" />
+                                            </div>
+                                            <div class="form-group">
+                                                <input type="number" name="duration" class="form-control" placeholder="duration *" value="" />
+                                            </div>
+                                            <div class="form-group">
+                                                <input type="number" name="passCriteria"  class="form-control"  placeholder="Pass criteria *" value="" />
+                                            </div>
+                                            {{ csrfField() }}
+                                        <!--div class="form-group">
+                                            <input type="password" class="form-control"  placeholder="Confirm Password *" value="" />
+                                        </div>
+                                        <div class="form-group">
+                                            <div class="maxl">
+                                                <label class="radio inline"> 
+                                                    <input type="radio" name="gender" value="male" checked>
+                                                    <span> Male </span> 
+                                                </label>
+                                                <label class="radio inline"> 
+                                                    <input type="radio" name="gender" value="female">
+                                                    <span>Female </span> 
+                                                </label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <input type="email" class="form-control" placeholder="Your Email *" value="" />
+                                        </div>
+                                        <div class="form-group">
+                                            <input type="text" minlength="10" maxlength="10" name="txtEmpPhone" class="form-control" placeholder="Your Phone *" value="" />
+                                        </div>
+                                        <div class="form-group">
+                                            <select class="form-control">
+                                                <option class="hidden"  selected disabled>Please select your Sequrity Question</option>
+                                                <option>What is your Birthdate?</option>
+                                                <option>What is Your old Phone Number</option>
+                                                <option>What is your Pet Name?</option>
+                                            </select>
+                                        </div>
+                                        <div class="form-group">
+                                            <input type="text" class="form-control" placeholder="Enter Your Answer *" value="" />
+                                        </div-->
+                                        <input type="button" class="btnRegister create-quiz"  value="ADD"/>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        <div class="tab-pane fade show" id="profile" role="tabpanel" aria-labelledby="profile-tab">
+                            <h3  class="register-heading">Filter Assessment</h3>
+                            <div class="row register-form">
+                                <!--div class="col-md-6">
+                                    <div class="form-group">
+                                        <input type="text" class="form-control" placeholder="First Name *" value="" />
+                                    </div>
+                                    <div class="form-group">
+                                        <input type="text" class="form-control" placeholder="Last Name *" value="" />
+                                    </div>
+                                    <div class="form-group">
+                                        <input type="email" class="form-control" placeholder="Email *" value="" />
+                                    </div>
+                                    <div class="form-group">
+                                        <input type="text" maxlength="10" minlength="10" class="form-control" placeholder="Phone *" value="" />
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <input type="password" class="form-control" placeholder="Password *" value="" />
+                                    </div>
+                                    <div class="form-group">
+                                        <input type="password" class="form-control" placeholder="Confirm Password *" value="" />
+                                    </div>
+                                    <div class="form-group">
+                                        <select class="form-control">
+                                            <option class="hidden"  selected disabled>Please select your Sequrity Question</option>
+                                            <option>What is your Birthdate?</option>
+                                            <option>What is Your old Phone Number</option>
+                                            <option>What is your Pet Name?</option>
+                                        </select>
+                                    </div>
+                                    <div class="form-group">
+                                        <input type="text" class="form-control" placeholder="Answer *" value="" />
+                                    </div>
+                                    <input type="submit" class="btnRegister"  value="Register"/>
+                                </div-->
+                            </div>
+                        </div>   
+                    </div>
+                        
+            </div>
+                    
+        </div>   
+    </div>
+</body>
+
+<!--script src="http://rendro.github.io/easy-pie-chart/javascripts/jquery.easy-pie-chart.js"></script-->
+<script>
+    $(document).ready(function(){
+        $('.create-quiz').on('click', ()=>{
+            var formData = $('#create-quiz').serializeObject()
+            $.app.createQuiz(formData).done(function(response){
+                console.log(response)
+            })   
+        })
+
+        $.app.getQuizs({_id:"5d90906b59c8a8155035c450"}).done(function(response){
+            console.log(response)
+        })
+    })
+</script>
+</html>

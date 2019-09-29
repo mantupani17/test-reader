@@ -150,7 +150,7 @@
 
         loadPage: function(){            
             // window.PDFViewerApplication.open(settings.url+settings.pageNum);
-            window.PDFViewerApplication.open('/api/media/reader?fileName=doc_'+settings.pageNum);
+            window.PDFViewerApplication.open(settings.pdfMetaData.load_url);
             $(settings.templateItems.pageNumberField).val(settings.pageNum);
         },
 
@@ -159,9 +159,10 @@
             if(settings.pageNum <= 1){
                 $(settings.templateItems.prevPageBtn).prop('disabled', true);
             }
+            var pdfData = settings.pdfMetaData;
             $(settings.secondaryToolBarItems.firstPage).prop('disabled', false);
             $(settings.secondaryToolBarItems.lastPage).prop('disabled', false);
-            $(settings.totalPagesElement).html('of '+settings.totalPages);
+            // $(settings.totalPagesElement).html('of '+settings.totalPages);
             $(settings.templateItems.nextPageBtn).bind('click').on('click', increasePageHandler);
             $(settings.templateItems.prevPageBtn).bind('click').on('click', dicreasePageHandler);
             $(settings.templateItems.pageNumberField).bind('change').on('change', changePageHandler);
@@ -208,14 +209,12 @@
             });
 
             $(document).bind('textlayerrendered').on('textlayerrendered', function () {
-                // if (pdfData.free === 'Free') {
-                //     var totalpages = PDFViewerApplication.pdfDocumentProperties.pdfDocument.pdfInfo.numPages;
-                //     settings.pageTotal = totalpages;
-
-                //     $(settings.totalPageDisplaySelector).html(totalpages);
-                //     self.currentPage = PDFViewerApplication.pdfViewer.currentPageNumber;
-
-                // }
+                if (pdfData.isFree === '1') {
+                    var totalpages = PDFViewerApplication.pagesCount;
+                    settings.totalPages = totalpages;
+                    $(settings.totalPagesElement).html('of '+settings.totalPages);
+                    self.currentPage = PDFViewerApplication.pdfViewer.currentPageNumber;
+                }
                 // self._renderAnnotations();
                 // alert()
                 // self.loadAllNotes()
@@ -682,6 +681,10 @@
             return
         }
         $(settings.templateItems.prevPageBtn).prop('disabled', false);
+        if(settings.pdfMetaData.isFree === '1'){
+            PDFViewerApplication.page++;
+            return false;
+        }
         settings.pageNum += 1;   
         Annotation.loadPage();     
     }

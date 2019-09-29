@@ -15,8 +15,8 @@ class BaseController {
 
     async toObjectId(fileId){
         try {
-            const mongodb = require('mongodb')
-            return new mongodb.ObjectID(fileId)   
+            var ObjectID = require("bson-objectid");
+            return ObjectID(fileId)   
         } catch (error) {
             console.log(error)
         }
