@@ -41,6 +41,17 @@ class FrontendController extends BaseController{
         }
     }
 
+    async uploadImages({request, response, view}){
+        try {
+            return view.render('upload-images' , {title:'Upload Images with excelljs'})
+        } catch (error) {
+            console.log(error)
+            response.send({
+                status:false,
+                message:'OOPS' + error
+            })
+        }
+    }
 
 }
 

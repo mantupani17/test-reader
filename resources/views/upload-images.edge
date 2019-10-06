@@ -1,0 +1,62 @@
+<!DOCTYPE >
+<html>
+<head>
+<title>{{title}}</title>
+<link rel='stylesheet' href="{{ assetsUrl('assets/font/fa.css')}}">
+<link rel='stylesheet' href="{{ assetsUrl('assets/font/google-font.css')}}">
+<link rel='stylesheet' href="{{ assetsUrl('assets/bootstrap/bootstrap.4.css') }}">
+</head>
+<body>
+    <form name="read-file" id="read-file" class="read-file">
+            {{ csrfField() }}
+        <div class="container">
+            <div class="row">
+                <div class="col-md-4 col-lg-4 col-sm-4">
+                    <div class="custom-file">
+                        <input type="file" class="custom-file-input" id="customFileLang" name="filename" lang="es">
+                        <label class="custom-file-label" for="customFileLang">Choose</label>
+                        <input name="filename" type="hidden"/>
+                    </div>
+                </div>
+                <div class="col-md-4 col-lg-4 col-sm-4">
+                    <button type="button" class="btn btn-outline-success" id="upload-images">uplaod</button>
+                </div>
+            </div>
+        </div>
+    </form>
+</body>
+<script type="text/javascript" src="{{ assetsUrl('assets/js/jquery.min.js') }}"></script>
+<script>
+    $(document).ready(function(e){
+       
+        var service = {
+            readImages: function(data){
+                return $.ajax({
+                    type:'POST',
+                    url:"/api/excelljs/read-images",
+                    data: data,
+                    cache: false,
+                    contentType: false,
+                    processData: false
+                })
+            }
+        }
+        $('#upload-images').on('click' , function(e){
+            $('#read-file').trigger('submit')
+        })
+        $('#read-file').submit(function(e){
+            e.preventDefault();
+            var formData = new FormData(this);
+            service.readImages(formData).done(function(response){
+                console.log(response)
+            })
+        })
+        // Display file name 
+        $('input[type="file"]').on('change', function(e){
+            var fileName = e. target. files[0]. name;
+            $('label[for="customFileLang"]').html(fileName)
+            $('input[type="hidden"]').val(fileName)
+        })
+    })
+</script>
+</html>

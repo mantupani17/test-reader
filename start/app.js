@@ -20,7 +20,9 @@ const providers = [
   '@adonisjs/session/providers/SessionProvider',
   '@adonisjs/auth/providers/AuthProvider', 
   'lucid-mongo/providers/LucidMongoProvider',
-  '@adonisjs/drive/providers/DriveProvider'
+  '@adonisjs/drive/providers/DriveProvider',
+  '@adonisjs/validator/providers/ValidatorProvider',
+  'adonis-scheduler/providers/SchedulerProvider'
 ]
 
 /*
@@ -35,6 +37,7 @@ const providers = [
 const aceProviders = [
   '@adonisjs/lucid/providers/MigrationsProvider',
   //'lucid-mongo/providers/MigrationsProvider'
+  'adonis-scheduler/providers/CommandsProvider'
 ]
 
 /*
@@ -49,7 +52,9 @@ const aceProviders = [
 |   { Route: 'Adonis/Src/Route' }
 |
 */
-const aliases = {}
+const aliases = {
+  Scheduler: 'Adonis/Addons/Scheduler'
+}
 
 /*
 |--------------------------------------------------------------------------

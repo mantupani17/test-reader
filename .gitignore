@@ -13,3 +13,8 @@ yarn.lock
 
 # The development sqlite file
 database/development.sqlite
+
+#this is for ignore the upload fies and tmp location
+resources/upload_files/*
+tmp/uploads/*
+
